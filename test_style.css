@@ -12,10 +12,31 @@
     margin-left:20px;
 }
 
+.stofapoint{
+    margin-top:5px;
+    font-weight: bold;
+    margin-right:4px;
+    float:left;
+    text-align:center;
+    font-size:14px;
+    height:16px;
+    width: 16px;
+}
+.Norlyspris{
+    margin-right:11px;
+    margin-top:5px;
+    font-weight: bold;
+    float:left;
+    text-align:center;
+    font-size:14px;
+    height:16px;
+    width: 16px;
+}
+
 .hoverable{
     margin-top:8px;
     font-weight: bold;
-    margin-right:7px;
+    margin-right:5px;
     float:left;
     text-align:center;
     font-size:12px;
@@ -59,7 +80,7 @@ p{
 #check{
     text-align: left;
     display: grid;
-    grid-template-columns:21% 17% 17% 21%;	
+    grid-template-columns:22% 18% 18% 22%;	
     justify-content:space-evenly;
     margin-left:100px;
 }
@@ -92,6 +113,14 @@ p{
 #ryd{
     position:absolute;
     right:20px;
+}
+
+#pointcheck{
+    position:absolute;
+    right:150px;
+    margin-top:10px;
+    font-size:18px;
+    font-family: sans-serif;
 }
 #res{
     text-align: center;

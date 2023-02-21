@@ -269,7 +269,42 @@ for (let i=0;i<names.length;i++) {
             mycheck.checked=true;
         }
     })
+
+    let pointtal=document.createElement("div");
+    pointtal.classList.add("stofapoint");
+    pointtal.classList.add("hidden");
+    //Stofa pointknap
+    let kanaler=[{TV2:0,TV2Charlie:0,TV2Fri:1,TV2News:1,TV2Sport:2,TV2SportX:2,TV2Zulu:1,TV3:0,TV3Max:2,"TV3 +":3,TV3Puls:0,TV3Sport:3,Kanal4:0,Kanal5:0,'6eren':1,Canal9:1,DiscoveryChannel:1,DK4:0,NationalGeographic:1,'3Sat':1,AlJazeera:1,Animalplanet:1,ARD:"Løsning ikke mulig",ARTE:1,BBCBrit:1,BBCEarth:1,BBCWorldNews:1,BlueHustler:1,Boomerang:1,CartoonNetwork:1,CBSReality:1,CNN:1,DisneyChannel:1,DisneyJunior:1,Euronews:1,Eurosport1:1,Eurosport2:2,"ID-InvestegationDiscovery":1,Mezzo:1,MTV:1,MTV80s:1,MTV90s:1,MTVHits:1,NationalGeographicWild:1,NDR:0,"Nick jr.":1,Nickelodeon:1,NRK1:0,ZDF:0,SVT1:0,Folketinget:0,NRK2:0,"TV4 Sverige":0,SVT2:0,"TV2Norge":0,ProSieben:1,"Rai 1":1,See:2,TLC:1,VH1:1,"V sport golf":1,"Viasat Explore":1,"Viasat History":1,"Viasat Nature":1,DiscoveryScience:1,"ESC/ESC1":1,"Extreme Sport":1,"HRT-TV1":1,MTVClub:1,MTVLive:1,Polonia:1,"Sport Live":1}];
+    kanaler.sort();
+    let pointknap=document.querySelector("#pointknap");
+    pointknap.addEventListener("click",function(){
+        pointknap.classList.toggle("is-primary");
+        pointtal.classList.toggle("hidden");
+        if(kanaler[0][names[i]]!=="Løsning ikke mulig"){
+            pointtal.innerHTML="("+kanaler[0][names[i]]+")";
+        }
+    })
+
+    //Norlys knap
+    let kanalpriser=[{TV2:49,TV2Charlie:39,TV2Fri:39,TV2News:39,TV2Sport:39,TV2SportX:39,TV2Zulu:39,TV3:49,TV3Max:39,"TV3 +":99,TV3Puls:39,TV3Sport:49,Kanal4:39,Kanal5:49,'6eren':39,Canal9:39,DiscoveryChannel:29,DK4:29,NationalGeographic:29,'3Sat':"Løsning ikke mulig",AlJazeera:"Løsning ikke mulig",Animalplanet:29,ARD:0,ARTE:"Løsning ikke mulig",BBCBrit:"Løsning ikke mulig",BBCEarth:"Løsning ikke mulig",BBCWorldNews:"Løsning ikke mulig",BlueHustler:"Løsning ikke mulig",Boomerang:"Løsning ikke mulig",CartoonNetwork:"Løsning ikke mulig",CBSReality:"Løsning ikke mulig",CNN:"Løsning ikke mulig",DisneyChannel:29,DisneyJunior:29,Euronews:"Løsning ikke mulig",Eurosport1:29,Eurosport2:39,"ID-InvestegationDiscovery":29,Mezzo:"Løsning ikke mulig",MTV:"Løsning ikke mulig",MTV80s:"Løsning ikke mulig",MTV90s:"Løsning ikke mulig",MTVHits:"Løsning ikke mulig",NationalGeographicWild:"Løsning ikke mulig",NDR:0,"Nick jr.":"Løsning ikke mulig",Nickelodeon:29,NRK1:0,ZDF:0,SVT1:0,Folketinget:"Løsning ikke mulig",NRK2:"Løsning ikke mulig","TV4 Sverige":0,SVT2:0,"TV2Norge":0,ProSieben:"Løsning ikke mulig","Rai 1":"Løsning ikke mulig",See:39,TLC:29,VH1:29,"V sport golf":"Løsning ikke mulig","Viasat Explore":"Løsning ikke mulig","Viasat History":"Løsning ikke mulig","Viasat Nature":"Løsning ikke mulig",DiscoveryScience:"Løsning ikke mulig","ESC/ESC1":"Løsning ikke mulig","Extreme Sport":"Løsning ikke mulig","HRT-TV1":"Løsning ikke mulig",MTVClub:"Løsning ikke mulig",MTVLive:"Løsning ikke mulig",Polonia:"Løsning ikke mulig","Sport Live":"Løsning ikke mulig"}];
+    kanalpriser.sort();
+
+    let pristal=document.createElement("div");
+    pristal.classList.add("Norlyspris");
+    pristal.classList.add("hidden");
+
+    let prisknap=document.querySelector("#prisknap");
+    prisknap.addEventListener("click",function(){
+        prisknap.classList.toggle("is-primary");
+        pristal.classList.toggle("hidden");
+        if(kanalpriser[0][names[i]]!=="Løsning ikke mulig"){
+            pristal.innerHTML="("+kanalpriser[0][names[i]]+")";
+        }
+    })
+
     let mellem= document.createElement("br");
+    side.appendChild(pristal);
+    side.appendChild(pointtal);
     side.appendChild(infohover);
     side.appendChild(hiddeninfo);
     side.appendChild(mycheck);
@@ -279,7 +314,6 @@ for (let i=0;i<names.length;i++) {
     mellem.classList.add("mellem");
 
 }
-
 //Streaming
 let stream=["TV2PlayBasis","TV2PlayFavoritSport","TV2PlayFavoritSport (Uden reklamer)","Disney+","HBOMax","NetflixStandard","NetflixPremium","NordiskFilm+","CMore","SkyShowtime","NationalGeographicNow","Discovery+underholdning","Discovery+Sport","Viaplay (Film og Serier)","Viaplay Total"];
 stream.sort();
@@ -322,7 +356,41 @@ for (let i=0;i<stream.length;i++) {
             mycheck.checked=true;
         }
     })
+
+    let pointtal=document.createElement("div");
+    pointtal.classList.add("stofapoint");
+    pointtal.classList.add("hidden");
+    //Stofa pointknap
+    let streamnavn=[{TV2PlayBasis:2,TV2PlayFavoritSport:8,"TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:4,NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":3,CMore:5,SkyShowtime:"Løsning ikke mulig",NationalGeographicNow:"Løsning ikke mulig","Discovery+underholdning":2,"Discovery+Sport":8,"Viaplay (Film og Serier)":6,"Viaplay Total":"Løsning ikke mulig"}];
+    streamnavn.sort();
+    let pointknap=document.querySelector("#pointknap");
+    pointknap.addEventListener("click",function(){
+        pointknap.classList.toggle("is-primary");
+        pointtal.classList.toggle("hidden");
+        if(streamnavn[0][stream[i]]!=="Løsning ikke mulig"){
+            pointtal.innerHTML="("+streamnavn[0][stream[i]]+")";
+        }
+    })
+    //Norlys prisknap
+    let streamNor=[{TV2PlayBasis:"Løsning ikke mulig",TV2PlayFavoritSport:"Løsning ikke mulig","TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:"Løsning ikke mulig",NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":"Løsning ikke mulig",CMore:"Løsning ikke mulig",SkyShowtime:"Løsning ikke mulig",NationalGeographicNow:"Løsning ikke mulig","Discovery+underholdning":"Løsning ikke mulig","Discovery+Sport":"Løsning ikke mulig","Viaplay (Film og Serier)":"Løsning ikke mulig","Viaplay Total":"Løsning ikke mulig"}];
+    streamNor.sort();
+
+    let pristal=document.createElement("div");
+    pristal.classList.add("Norlyspris");
+    pristal.classList.add("hidden");
+
+    let prisknap=document.querySelector("#prisknap");
+    prisknap.addEventListener("click",function(){
+        prisknap.classList.toggle("is-primary");
+        pristal.classList.toggle("hidden");
+        if(streamNor[0][stream[i]]!=="Løsning ikke mulig"){
+            pristal.innerHTML="("+streamNor[0][stream[i]]+")";
+        }
+
+    })
+
     let mellem= document.createElement("br");
+    side.appendChild(pointtal);
     side.appendChild(mycheck);
     side.appendChild(label);
     side.appendChild(mellem);
@@ -330,6 +398,8 @@ for (let i=0;i<stream.length;i++) {
     mellem.classList.add("mellem");
 
 }
+
+
 
 //UDREGNER PRISER
 let streampris=[{"TV2PlayBasis":49,"TV2PlayFavoritSport":189,"TV2PlayFavoritSport (Uden reklamer)":219,"Disney+":79,"HBOMax":79,"NetflixStandard":114,"NetflixPremium":149,"NordiskFilm+":49,"CMore":99,"SkyShowtime":69,"NationalGeographicNow":"Løsning ikke mulig","Discovery+underholdning":79,"Discovery+Sport":129,"Viaplay (Film og Serier)":129,"Viaplay Total":449}];
