@@ -6,6 +6,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
         <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
         <link rel="stylesheet" href="test_style.css">
+        <script src="https://smtpjs.com/v3/smtp.js"></script>
     </head>
     <body>
         <div id="main">
@@ -39,8 +40,8 @@
         <button id="Norlys" class="button"> Norlys </button>
         <button id="Stofa" class="button"> Stofa </button>
         <button id="ryd" class="button"> Ryd valgte</button>
-        <button id="pointknap" class="button"> Se Stofa point</button>
         <button id="prisknap" class="button"> Se Norlys priser</button>
+        <button id="pointknap" class="button"> Se Stofa point</button>
         <br>
         <hr>
         
@@ -85,9 +86,14 @@
                 </form>
             </div>
         <div id="res">
-            <button id="btn" type="submit">Få resultat</button>
-            <button id="btn1" type="submit">Priser på streaming</button>
+          <div id="btndiv">
+            <button id="btn1" class="button" type="submit">Priser på streaming</button>
+            <button id="btn" class="button" type="submit">Få resultat</button>
+            <button id="btn2" class="button" type="submit">Kampagner</button>
+          </div>
+            <button id="feedback" class="button">Giv feedback</button>
         </div>
+        
         </div>
         <script src="testkode.js"></script>
     </body>
