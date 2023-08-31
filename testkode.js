@@ -3,55 +3,109 @@ if (!sessionStorage.getItem('pageLoaded')) {
     location.reload();
 }
 
-let names=["TV2","TV2Charlie","TV2Fri","TV2News","TV2Sport","TV2SportX","TV2Echo","TV3","TV3Max","TV3 +","TV3Puls","TV3Sport","Kanal4","Kanal5","6eren","Canal9","DiscoveryChannel","DK4","NationalGeographic","3Sat","AlJazeera","Animalplanet","ARD","ARTE","BBCBrit","BBCEarth","BBCWorldNews","BlueHustler","Boomerang","CartoonNetwork","CBSReality","CNN","DisneyChannel","DisneyJunior","Euronews","Eurosport1","Eurosport2","ID-InvestegationDiscovery","Mezzo","MTV","MTV80s","MTV90s","MTVHits","NationalGeographicWild","NDR","Nick jr.","Nickelodeon","NRK1","ZDF","SVT1","Folketinget","NRK2","TV4 Sverige","SVT2","TV2Norge","ProSieben","Rai 1","See","TLC","VH1","V sport golf","Viasat Explore","Viasat History","Viasat Nature","DiscoveryScience","ESC/ESC1","Extreme Sport","HRT-TV1","MTVClub","MTVLive","Polonia","Sport Live"];
-names.sort();
-let prettynames=["TV2","TV2 Charlie","TV2 Fri","TV2 News","TV2 Sport","TV2 SportX","TV2 Echo","TV3","TV3 MAX","TV3 +","TV3 Puls","TV3 Sport","Kanal 4","Kanal 5","6'eren","Canal 9","Discovery Channel","DK4","National Geographic","3Sat","Al Jazeera","Animal Planet","ARD","ARTE","BBC Brit","BBC Earth","BBC World News","Blue Hustler","Boomerang","Cartoon Network","CBS Reality","CNN","Disney Channel","Disney Junior","Euronews","Eurosport 1","Eurosport 2","ID-Investegation Discovery","Mezzo","MTV","MTV 80s","MTV 90s","MTV Hits","National Geographic Wild","NDR","Nick Jr.","Nickelodeon","NRK1","ZDF","SVT1","Folketinget","NRK2","TV4 Sverige","SVT2","TV2 Norge","ProSieben","Rai 1","See","TLC","VH1","V sport golf","Viasat Explore","Viasat History","Viasat Nature","Discovery Science","ESC/ESC1","Extreme Sport","HRT-TV1","MTV Club","MTV Live","Polonia","Sport Live"];
-prettynames.sort();
+//Hente csv fil med kanaler og lave udbyderliste og kanalliste
+//#region
+let myvar=""
+$.ajax({
+  contentType: "application/x-www-form-urlencoded;charset=utf-8",
+  async:false,
+  url: "https://raw.githubusercontent.com/CWJNor/kanalcsv/main/kanaler.csv",
+  success: function(csv) {
+      const output = Papa.parse(csv, {
+        header: true, // Convert rows to Objects using headers as properties
+      });
+      if (output.data) {
+        myvar=output.data;
+      } else {
+        console.log(output.errors);
+      }
+  },
+  error: function(jqXHR, textStatus, errorThrow){
+      console.log(textStatus);
+  }
+
+});
+let kanalliste=[];
+let udbyderdict={}
+
+//Tilføj tjek om kanalen er i enten Stofa eller Norlys
+//Hvis tom så ignorer
+for(v of myvar.slice(0,-1)){
+let overskrift=Object.keys(v);
+let kanalnavn=v["Kanal"];
+overskrift.shift();
+kanalliste.push(kanalnavn);
+
+for (ov of overskrift){
+  if (!udbyderdict[ov]) {
+    udbyderdict[ov] = {};
+  }
+if (v[ov].length==0){
+    v[ov]="Løsning ikke mulig";
+}
+  udbyderdict[ov][kanalnavn]=v[ov];
+}
+}
+kanalliste=kanalliste;
+kanalliste.sort();
+
+for(key of Object.keys(udbyderdict)){
+const sortedObject = Object.fromEntries(
+    Object.entries(udbyderdict[key]).sort((a, b) => a[0].localeCompare(b[0]))
+  );
+  udbyderdict[key] = sortedObject;
+}
+//#endregion
+
+//let names=["TV2","TV2Charlie","TV2Fri","TV2News","TV2Sport","TV2SportX","TV2Echo","TV3","TV3Max","TV3 +","TV3Puls","TV3Sport","Kanal4","Kanal5","6eren","Canal9","DiscoveryChannel","DK4","NationalGeographic","3Sat","AlJazeera","Animalplanet","ARD","ARTE","BBCBrit","BBCEarth","BBCWorldNews","BlueHustler","Boomerang","CartoonNetwork","CBSReality","CNN","DisneyChannel","DisneyJunior","Euronews","Eurosport1","Eurosport2","ID-InvestegationDiscovery","Mezzo","MTV","MTV80s","MTV90s","MTVHits","NationalGeographicWild","NDR","Nick jr.","Nickelodeon","NRK1","ZDF","SVT1","Folketinget","NRK2","TV4 Sverige","SVT2","TV2Norge","ProSieben","Rai 1","See","TLC","VH1","V sport golf","Viasat Explore","Viasat History","Viasat Nature","DiscoveryScience","ESC/ESC1","Extreme Sport","HRT-TV1","MTVClub","MTVLive","Polonia","Sport Live"];
+//names.sort();
+//let prettynames=["TV2","TV2 Charlie","TV2 Fri","TV2 News","TV2 Sport","TV2 SportX","TV2 Echo","TV3","TV3 MAX","TV3 +","TV3 Puls","TV3 Sport","Kanal 4","Kanal 5","6'eren","Canal 9","Discovery Channel","DK4","National Geographic","3Sat","Al Jazeera","Animal Planet","ARD","ARTE","BBC Brit","BBC Earth","BBC World News","Blue Hustler","Boomerang","Cartoon Network","CBS Reality","CNN","Disney Channel","Disney Junior","Euronews","Eurosport 1","Eurosport 2","ID-Investegation Discovery","Mezzo","MTV","MTV 80s","MTV 90s","MTV Hits","National Geographic Wild","NDR","Nick Jr.","Nickelodeon","NRK1","ZDF","SVT1","Folketinget","NRK2","TV4 Sverige","SVT2","TV2 Norge","ProSieben","Rai 1","See","TLC","VH1","V sport golf","Viasat Explore","Viasat History","Viasat Nature","Discovery Science","ESC/ESC1","Extreme Sport","HRT-TV1","MTV Club","MTV Live","Polonia","Sport Live"];
+//prettynames.sort();
 
 let beskrivelser=[{"TV2":"Danmarks mest sete tv-kanal, som samler danskerne om alt det vi deler gennem et mangfoldigt programudbud, der omfatter nyheder, aktualitet, dansk fiktion, underholdning, sport, dokumentar og livsstil, spillefilm, morgen-tv og meget mere.",
-"TV2Charlie":"Kanalen henvender sig til voksne og nysgerrige danskere med lyst til at blive underholdtog  prioriterer den gode danske underholdning og musik, dansk fiktion, talkshows, danske filmklassikere, events og de bedste europæiske serier, herunder både dramaer og prisbelønnede krimiserier.",
-"TV2Fri":"En unik fritids- og friluftskanal for dig, der vil inspireres. Oplev programmer om hus, have, madlavning og gør-det-selv arbejde.",
-"TV2News":"Danmarks største nyhedskanal for dig, der vil have breaking news og følge med i begivenhederne, mens de sker.",
-"TV2Sport":"Her får du mere end sublime sportsoplevelser. Du får også knivskarpe analyser og journalistiske sportsmagasiner.",
-"TV2SportX":"TV 2 SPORT X har fokus på store internationale stjerner indenfor verdens bedste fodboldliga, tennis, basketball, X-Games, atletik og meget mere.",
-"TV2Echo":"TV 2 Echo giver et ungt, nysgerrigt og undersøgende perspektiv på alt hvad livet indebærer. Her finder du reality, dokumentarer, nyskabende fiktion, comedy samt store events. Kanalen fokuserer desuden meget på E-sport, hvor vi tilbyder en dedikeret dansk dækning, blandt andet med 700 timers Counter-Strike årligt.",
+"TV2 Charlie":"Kanalen henvender sig til voksne og nysgerrige danskere med lyst til at blive underholdtog  prioriterer den gode danske underholdning og musik, dansk fiktion, talkshows, danske filmklassikere, events og de bedste europæiske serier, herunder både dramaer og prisbelønnede krimiserier.",
+"TV2 Fri":"En unik fritids- og friluftskanal for dig, der vil inspireres. Oplev programmer om hus, have, madlavning og gør-det-selv arbejde.",
+"TV2 News":"Danmarks største nyhedskanal for dig, der vil have breaking news og følge med i begivenhederne, mens de sker.",
+"TV2 Sport":"Her får du mere end sublime sportsoplevelser. Du får også knivskarpe analyser og journalistiske sportsmagasiner.",
+"TV2 SportX":"TV 2 SPORT X har fokus på store internationale stjerner indenfor verdens bedste fodboldliga, tennis, basketball, X-Games, atletik og meget mere.",
+"TV2 Echo":"TV 2 Echo giver et ungt, nysgerrigt og undersøgende perspektiv på alt hvad livet indebærer. Her finder du reality, dokumentarer, nyskabende fiktion, comedy samt store events. Kanalen fokuserer desuden meget på E-sport, hvor vi tilbyder en dedikeret dansk dækning, blandt andet med 700 timers Counter-Strike årligt.",
 "TV3":"TV3 er din kanal for sport, reality og underholdning. Det er her du finder programmer som 'Paradise Hotel', 'Divaer i Junglen' og meget mere.",
-"TV3Max":"TV3 Max har en stærk sammensætning af verdensklasse sport og comedy. Her kan du se Premier League, Champions League, Superligaen og The Simpsons.",
-"TV3 +":"TV3+ viser sport, spænding og spas. Følg kampene i Champions League, Premier League og Superligaen, se masser af Formel 1 og bliv underholdt af en lang række komedieserier.",
-"TV3Puls":"TV3 Puls er kanalen, der fornemmer tendenserne inden for blandt andet mad, mode, indretning og design, og formidler dem gennem fascinerende og inspirerende livsstilsprogrammer i et univers, der aldrig får for travlt til nærvær og indlevelse.",
-"TV3Sport":"TV3 Sport er den ultimative kanal for enhver sportselsker. Her kan du bl.a. følge med i Champions League, Superligaen, Formel 1, NFL, NHL og en række golfturneringer.",
-"Kanal4":"Kanal 4 er for dig, der elsker reality og big characters med en humoristisk, uhøjtidelig, modig og ærlig tilgang til verden. Fascination, drømme og ekstravagance er i højsædet, når du får indblik i nogle af Danmarks største personligheders liv, når de lukker op og giver et eksklusivt indblik i det liv, mange af os kun tør drømme om.",
-"Kanal5":"Kanal 5 samler familien og giver dig et underholdende pusterum, når vi blænder op for tempofyldte underholdningsprogrammer, fængslende krimiserier og stærke faktaprogrammer fra virkelighedens verden og nye, spændende fiktionsserier. Med andre ord - underholdning for hele familien.",
-"6eren": "6’eren er for dig, der elsker både sport, actionfilm og serier. Der er fart over feltet, både når 3F Superligaens tophold spiller og speedway-stjernerne gasser op. Oplev verdensklasse fodbold fra FA Cup og Carabao Cup sammen med et eksperthold bestående af blandt andet Brian Laudrup og Thomas Gravesen.",
-"Canal9":"Canal 9 giver dig spændende fodbold og programmer, der undersøger verden omkring os, uanset om det er mad eller leveforhold. Du får herrefight fra 3F Superligaen og FA Cuppen, og programmer om f.eks. hårdføre typer fra Alaska.",
-"DiscoveryChannel":"En kanal for den kvalitetsbevidste seer, der er til prisvindende dokumentarer, fascinerende serier og intelligent underholdning.",
+"TV3 Max":"TV3 Max har en stærk sammensætning af verdensklasse sport og comedy. Her kan du se Premier League, Champions League, Superligaen og The Simpsons.",
+"TV3+":"TV3+ viser sport, spænding og spas. Følg kampene i Champions League, Premier League og Superligaen, se masser af Formel 1 og bliv underholdt af en lang række komedieserier.",
+"TV3 Puls":"TV3 Puls er kanalen, der fornemmer tendenserne inden for blandt andet mad, mode, indretning og design, og formidler dem gennem fascinerende og inspirerende livsstilsprogrammer i et univers, der aldrig får for travlt til nærvær og indlevelse.",
+"TV3 Sport":"TV3 Sport er den ultimative kanal for enhver sportselsker. Her kan du bl.a. følge med i Champions League, Superligaen, Formel 1, NFL, NHL og en række golfturneringer.",
+"Kanal 4":"Kanal 4 er for dig, der elsker reality og big characters med en humoristisk, uhøjtidelig, modig og ærlig tilgang til verden. Fascination, drømme og ekstravagance er i højsædet, når du får indblik i nogle af Danmarks største personligheders liv, når de lukker op og giver et eksklusivt indblik i det liv, mange af os kun tør drømme om.",
+"Kanal 5":"Kanal 5 samler familien og giver dig et underholdende pusterum, når vi blænder op for tempofyldte underholdningsprogrammer, fængslende krimiserier og stærke faktaprogrammer fra virkelighedens verden og nye, spændende fiktionsserier. Med andre ord - underholdning for hele familien.",
+"6'eren": "6’eren er for dig, der elsker både sport, actionfilm og serier. Der er fart over feltet, både når 3F Superligaens tophold spiller og speedway-stjernerne gasser op. Oplev verdensklasse fodbold fra FA Cup og Carabao Cup sammen med et eksperthold bestående af blandt andet Brian Laudrup og Thomas Gravesen.",
+"Canal 9":"Canal 9 giver dig spændende fodbold og programmer, der undersøger verden omkring os, uanset om det er mad eller leveforhold. Du får herrefight fra 3F Superligaen og FA Cuppen, og programmer om f.eks. hårdføre typer fra Alaska.",
+"Discovery Channel":"En kanal for den kvalitetsbevidste seer, der er til prisvindende dokumentarer, fascinerende serier og intelligent underholdning.",
 "DK4":"På dk4 er der nemlig masser af lyttevenlig musik, god gedigen underholdning i musikkens tegn, sidste nyt om den danske teaterscene, aktuelle samtaleprogrammer om litteratur og kunst og indsigtsfulde programmer om alt det, vi elsker at lave i fritiden – lige fra camping og sejlsportsliv til skiløb, lystfiskeri og jagt. dk4 er dansk tv døgnet rundt.",
-"NationalGeographic":"Klog, faktuel underholdning til dig, der vil vide mere om teknologi, naturhistorie, arkæologi og naturens mysterier.",
+"National Geographic":"Klog, faktuel underholdning til dig, der vil vide mere om teknologi, naturhistorie, arkæologi og naturens mysterier.",
 "3Sat":"Videnskab, litteratur, dokumentar og musik. Teater, kunst og litteratur. 3SAT har forventninger til seernes intelligens – og du får smæk for skillingen.",
-"AlJazeera":"Aljazeera International sender arabiske nyheder på engelsk til hele verden.",
-"Animalplanet":"En dyrekanal for dig, der vil helt tæt på verdens dyreliv og menneskets liv med dyr.",
+"Al-Jazeera":"Aljazeera International sender arabiske nyheder på engelsk til hele verden.",
+"Animal Planet":"En dyrekanal for dig, der vil helt tæt på verdens dyreliv og menneskets liv med dyr.",
 "ARD":"Hver dag finder du nyproducerede film, serier og dokumentarer på Tysklands største tv-kanal, og mange af dem sendes med danske undertekster, når du ser med fra Danmark.",
 "ARTE":"Kultur-kanal med film, temaaftener, dokumentarfilm, debat og reportager.",
-"BBCBrit":"BBC Brit sender originale dramaserier, engelsk comedy og underholdningsprogrammer.",
-"BBCEarth":"BBC Earth er en tv-kanal, hvor prisvindende faktuelle og ikke-faktuelle programmer bliver præsenteret af eksperter i verdensklasse.",
-"BBCWorldNews":"BBC World er en britisk 24-timers nyhedskanal. Nyhedsudsendelserne på kanalen bliver kombineret med dybdeborende reportager, interviews, magasinprogrammer samt økonomiprogrammer.",
-"BlueHustler":"Blue Hustler er en amerikansk erotisk kanal.",
+"BBC Brit":"BBC Brit sender originale dramaserier, engelsk comedy og underholdningsprogrammer.",
+"BBC Earth":"BBC Earth er en tv-kanal, hvor prisvindende faktuelle og ikke-faktuelle programmer bliver præsenteret af eksperter i verdensklasse.",
+"BBC World News":"BBC World er en britisk 24-timers nyhedskanal. Nyhedsudsendelserne på kanalen bliver kombineret med dybdeborende reportager, interviews, magasinprogrammer samt økonomiprogrammer.",
+"Blue Hustler":"Blue Hustler er en amerikansk erotisk kanal.",
 "Boomerang":"Et sjovt og sikkert sted for de mindste – men også et stort hit blandt forældre med sine klassiske serier, der vækker minder.",
-"CartoonNetwork":"Cartoon Network er en kanal for børn i alle aldre og er fyldt med sjov, eventyr og underholdning. Her får du en blanding af moderne klassikere og helt nye tegnefilm. Alt tale er naturligvis på dansk.",
-"CBSReality":"Kanalen der bringer dig tæt på hverdagsdramaer. Her får du spænding og action fra virkelighedens verden.",
+"Cartoon Network":"Cartoon Network er en kanal for børn i alle aldre og er fyldt med sjov, eventyr og underholdning. Her får du en blanding af moderne klassikere og helt nye tegnefilm. Alt tale er naturligvis på dansk.",
+"CBS Reality":"Kanalen der bringer dig tæt på hverdagsdramaer. Her får du spænding og action fra virkelighedens verden.",
 "CNN":"Er du nyhedsjunkie, får du din trang stillet på CNN – en amerikansk nyhedskanal, der giver dig seneste nyt døgnet rundt.",
-"DisneyChannel":"En familiekanal der giver adgang til alt det bedste fra Disneys magiske verden – med dansk tale eller danske undertekster.",
-"DisneyJunior":"En kanal i øjenhøjde med de to-seks årige, der blander kendte figurer, musik og magiske fortællinger med læring.",
+"Disney Channel":"En familiekanal der giver adgang til alt det bedste fra Disneys magiske verden – med dansk tale eller danske undertekster.",
+"Disney Junior":"En kanal i øjenhøjde med de to-seks årige, der blander kendte figurer, musik og magiske fortællinger med læring.",
 "Euronews":"Euronews er nyheder fra hele verden, præsenteret i et pan-europæisk perspektiv og på flere europæiske sprog.",
-"Eurosport1":"Uanset om du er til cykling, tennis, motorsport, de største World Cups fra vinterlandskabet, snooker eller atletik – er Eurosport 1 kanalen for dig.",
-"Eurosport2":"Kanalen for dig, der ikke kan få nok af sport. Eurosport 2 byder på vintersport, cykling, tennis og fede fodboldoplevelser.",
-"ID-InvestegationDiscovery":"ID - Investigation Discovery er Danmarks eneste kanal kun med krimi. Her kan du se stærke dokumentarer med rekonstruktioner af virkelighedens mest rå og bestialske forbrydelser. Du kan se drabssager, familiefejder og efterforskning af nogle af de største og vildeste sager, ligesom du kan møde ofre og pårørende i stærke programmer.",
+"Eurosport 1":"Uanset om du er til cykling, tennis, motorsport, de største World Cups fra vinterlandskabet, snooker eller atletik – er Eurosport 1 kanalen for dig.",
+"Eurosport 2":"Kanalen for dig, der ikke kan få nok af sport. Eurosport 2 byder på vintersport, cykling, tennis og fede fodboldoplevelser.",
+"ID-Investegation Discovery":"ID - Investigation Discovery er Danmarks eneste kanal kun med krimi. Her kan du se stærke dokumentarer med rekonstruktioner af virkelighedens mest rå og bestialske forbrydelser. Du kan se drabssager, familiefejder og efterforskning af nogle af de største og vildeste sager, ligesom du kan møde ofre og pårørende i stærke programmer.",
 "Mezzo":"Mezzo er en fransk tv-kanal, der er afsat til klassisk musik, jazz og verdensmusik.",
 "MTV":"MTV - verdens største musik- og ungdomskanal. En global tv-kanal med lokalt fokus, som giver den bedste blanding af musik og nytænkende underholdning.",
-"MTV80s":"Musikkanalen for de modne seere. Her får du Golden Oldie's på stribe både som musikvideoer og live-optræden fra de bedste koncerter verden over.",
-"MTV90s":"MTV 90s er dedikeret til rock og alternativ musik.",
-"MTVHits":"MTV Hits er et stærkt supplement til MTV. MTV Hits sender alt det bedste og nyeste fra hitlisterne.",
-"NationalGeographicWild":"Kom helt tæt på naturen og oplev de mest nærgående optagelser med vilde dyr – det hele i en knivskarp billedkvalitet.",
+"MTV 80s":"Musikkanalen for de modne seere. Her får du Golden Oldie's på stribe både som musikvideoer og live-optræden fra de bedste koncerter verden over.",
+"MTV 90s":"MTV 90s er dedikeret til rock og alternativ musik.",
+"MTV Hits":"MTV Hits er et stærkt supplement til MTV. MTV Hits sender alt det bedste og nyeste fra hitlisterne.",
+"National Geographic Wild":"Kom helt tæt på naturen og oplev de mest nærgående optagelser med vilde dyr – det hele i en knivskarp billedkvalitet.",
 "NDR": "NDR er en tysk kanal med fokus på Nordtyskland",
 "Nick jr.":"Nick Jr. er en tv-kanal for de mindste børn mellem to og seks år. Kanalen viser sjove og lærerige tegnefilm, der er tilpasset de yngste og opfordrer til leg og læring.",
 "Nickelodeon":"Nickelodeon viser et bredt udbud af tegneserier og serier for børn.",
@@ -62,7 +116,7 @@ let beskrivelser=[{"TV2":"Danmarks mest sete tv-kanal, som samler danskerne om a
 "NRK2":"Norsk kanal fra NRK",
 "TV4 Sverige":"TV4 Sverige er den største kommercielle tv-kanal i Sverige",
 "SVT2":"SVT2 er Sveriges kanal dedikeret til kultur, viden og nicheprogrammer, og på kanalen finder du derfor et væld af udsendelser, som er både underholdende og en lille smule mere end det. SVT2 sender et udvalg af deres programmer med danske undertekster, når du ser med fra Danmark.",
-"TV2Norge": "TV2 Norge er Norges største kommercielle tv-kanal",
+"TV2 Norge": "TV2 Norge er Norges største kommercielle tv-kanal",
 "ProSieben":"Pro 7 satser på underholdning med internationale topserier, film, shows, hurtige nyheder og diverse magasiner.",
 "Rai 1":"Rai Uno sender underholdning, nyheder, sport og film 24 timer i døgnet.",
 "See":"See byder på originalt dansk indhold, populære serier og masser af sport.",
@@ -72,16 +126,24 @@ let beskrivelser=[{"TV2":"Danmarks mest sete tv-kanal, som samler danskerne om a
 "Viasat Explore":"Viasat Explore udfordrer din eventyrlyst. Kanalen er garant for eventyr og ekstreme oplevelser. Viasat Explore sender en god blanding af dybdeborende dokumentarserier og udfordrende ekspeditioner.",
 "Viasat History":"Hvis du er vild med historiens vingesus og dokumentarer om fordums tid, kan du booste din viden med Viasat History.",
 "Viasat Nature":"Viasat Nature viser spændende og lærerige dokumentarer samt natur- og dyreudsendelser. Bliv klog på dyrenes adfærd og naturens mange hemmeligheder med Viasat Nature.",
-"DiscoveryScience":"Kanalen for den nysgerrige seer, der søger svar på universelle spørgsmål i prisvindende dokumentarer og serier om videnskab og teknologi.",
+"Discovery Science":"Kanalen for den nysgerrige seer, der søger svar på universelle spørgsmål i prisvindende dokumentarer og serier om videnskab og teknologi.",
 "ESC/ESC1":"Generel underholdningskanal fra Egypten, der indeholder et væld af tv-underholdning.",
 "Extreme Sport":"Her er tempoet højt. Kanalen der giver dig det mest nervepirrende og inspirerende inden for livsstil, eventyr og ekstremsport.",
 "HRT-TV1":"En kroatisk kanal der sender underholdning, dokumentarer, undervisningsprogrammer, komedieserier, filmer og talkshow.",
-"MTVClub":"MTV Club er en musikkanal, der helt og holdent er tilegnet dansemusik. Du får drum’n’bass, trance, garage, house og fest i en fantastisk dansepakke.",
-"MTVLive":"MTV Live er en musikbaseret underholdningskanal, som tager udgangspunkt i legendariske, klassiske og splinternye MTV og Vh1 programmer.",
+"MTV Club":"MTV Club er en musikkanal, der helt og holdent er tilegnet dansemusik. Du får drum’n’bass, trance, garage, house og fest i en fantastisk dansepakke.",
+"MTV Live":"MTV Live er en musikbaseret underholdningskanal, som tager udgangspunkt i legendariske, klassiske og splinternye MTV og Vh1 programmer.",
 "Polonia":"Følg med i nyheder og tv-programmer direkte fra Polen.",
 "Sport Live":"SPORT LIVE er en dansk sportskanal, som sender live mindst 10 timer om dagen. Kanalen sender hestevæddeløb fra hele verden og har et dagligt studieprogram med eksperter. Derudover sender SPORT LIVE fra en række danske sportsbegivenheder."
 }]
 
+//Beskriverser- Hvorfor denne sorteringsmetode?
+//for(key of Object.keys(beskrivelser)){
+//    const sortedObject = Object.fromEntries(
+//        Object.entries(beskrivelser[key]).sort((a, b) => a[0].localeCompare(b[0]))
+//      );
+//      beskrivelser[key] = sortedObject;
+//  }
+ 
 beskrivelser.sort();
 
 let left = document.querySelector(".left");
@@ -89,10 +151,47 @@ let middleleft=document.querySelector(".middleleft");
 let middleright=document.querySelector(".middleright");
 let right = document.querySelector(".right");
 
+
+//Ændre navne på beskrivelser til samme som kanalliste
+//const options = {
+//    shouldSort: true,
+//    threshold: 0.2,
+//    location: 0,
+//    distance: 100,
+//    maxPatternLength: 32,
+//    minMatchCharLength: 1,
+//    keys: ["word"],
+//  };
+  
+ // let krename=Object.keys(beskrivelser[0]);
+ // const fuse = new Fuse(krename.map((word) => ({ word })), options);
+ // 
+ // kanalliste.forEach((target) => {
+ //   res=fuse.search(target);
+ //   console.log(target);
+ //   console.log(res);
+ //   res=res[0].item.word;
+ //   beskrivelser[0][target]=beskrivelser[0][res];
+ //   if(target!==res){
+ //     delete beskrivelser[0][res];
+ //   }
+ // });
+  
+  let names=kanalliste;
+
 //Norlys knap
 Norlysknap=document.querySelector("#Norlys");
 let clickedN=false;
-NorlysKanaler=["ZDF","SVT1","NRK1","TV4 Sverige","SVT2","ARD","TV2Norge","NDR","Folketinget"];
+NorlysKanaler=[];
+Norlysdict=udbyderdict["NorlysVaelgAltDTT_binaer"];
+for(k of Object.keys(Norlysdict)){
+    if(Norlysdict[k]=="0.0"){
+        NorlysKanaler.push(k);
+    }
+}
+
+
+//NorlysKanaler=["ZDF","SVT1","NRK1","TV4 Sverige","SVT2","ARD","TV2Norge","NDR","Folketinget"];
 Norlysknap.addEventListener("click",function(){
     let kan=document.getElementsByName("Kanal");
     if(clickedN==true){
@@ -113,10 +212,244 @@ Norlysknap.addEventListener("click",function(){
 }
 })
 
+//TV2 dropdown
+//#region
+let TV2list=["Vælg alle","TV2","TV2 Charlie","TV2 News","TV2 Echo","TV2 Fri","TV2 Sport", "TV2 SportX"]
+let TV2drop=document.querySelector("#tv2dropchild");
+let clicked2=false;
+
+for (let tv2 of TV2list){
+    let node=document.createElement("a");
+    let text=document.createTextNode(tv2);
+    node.appendChild(text);
+    node.classList.add("dropdown-item");
+    if(tv2!=="Vælg alle"){
+        node.addEventListener("click",function(){
+            let kan=document.getElementsByName("Kanal");
+                for (let k of kan){
+                    if (k.value==tv2){
+                        k.checked = !k.checked;
+                        triggerEvent(k, 'change');
+                    }
+                    }
+            if(Array.from(TV2drop.childNodes).slice(2).every(item => item.classList.contains("is-active"))){
+                TV2drop.childNodes[1].click();
+            }
+            //if(!Array.from(TV2drop.childNodes).slice(2).some(item => item.classList.contains("is-active"))){
+            //    TV2drop.childNodes[1].click();
+            //    TV2drop.childNodes[1].classList.remove("is-active");
+            //}
+            if(!Array.from(TV2drop.childNodes).slice(2).every(item => item.classList.contains("is-active"))){
+                TV2drop.childNodes[1].classList.remove("is-active");
+            }
+                })
+    }
+    else{
+        node.addEventListener("click",function(){
+            node.classList.toggle("is-active");
+            let kan=document.getElementsByName("Kanal");
+            for (let k of kan){
+                if (k.value.includes("TV2")){
+                    if(k.value.includes("TV2 PLAY")||k.value.includes("TV2 Norge")){
+        
+                    }
+                    else{
+                    if(node.classList.contains("is-active")){
+                        k.checked=true;
+                        triggerEvent(k, 'change');
+                    }
+                    else{
+                            k.checked=false;
+                        }
+                       
+                    }
+                    //Hvis "is-active"=>k.checked true , ellers k.checked false
+                }
+                }
+            })}
+    if(tv2=="Vælg alle"){
+        TV2drop.appendChild(node);
+        let breakline=document.createElement("hr");
+        //Horisontal linje efter Vælg alle
+        breakline.classList.add("dropdown-divider");
+        TV2drop.appendChild(breakline)
+        }
+    else{
+        TV2drop.appendChild(node);
+    }
+}
+
+TV2drop.childNodes[1].addEventListener("click",function(){
+    TV2array=Array.from(TV2drop.getElementsByTagName("a"))
+    TV2array.forEach((c)=>{
+        if (Array.from(TV2drop.childNodes[1].classList).indexOf("is-active")!==-1){
+            c.classList.add("is-active");
+        }
+        else{
+            c.classList.remove("is-active");
+        }
+        }
+       
+    )})
+//#endregion
+
+//Viaplay Group dropdown
+//#region
+let vialist=["Vælg alle","TV3","TV3+","TV3 Puls","TV3 Sport","TV3 Max","See"]
+let viadrop=document.querySelector("#viadropchild");
+
+for (let via of vialist){
+    let node=document.createElement("a");
+    let text=document.createTextNode(via);
+    node.appendChild(text);
+    node.classList.add("dropdown-item");
+    if(via!=="Vælg alle"){
+        node.addEventListener("click",function(){
+            let kan=document.getElementsByName("Kanal");
+                for (let k of kan){
+                    if (k.value==via){
+                        k.checked = !k.checked;
+                        triggerEvent(k, 'change');
+                    }
+                    }
+            if(Array.from(viadrop.childNodes).slice(2).every(item => item.classList.contains("is-active"))){
+                viadrop.childNodes[1].click();
+            }
+            if(!Array.from(viadrop.childNodes).slice(2).every(item => item.classList.contains("is-active"))){
+                viadrop.childNodes[1].classList.remove("is-active");
+            }
+                })
+    }
+    else{
+        node.addEventListener("click",function(){
+            node.classList.toggle("is-active");
+            let kan=document.getElementsByName("Kanal");
+            for (let k of kan){
+                if (vialist.includes(k.value)){
+                    if(node.classList.contains("is-active")){
+                        k.checked=true;
+                        triggerEvent(k, 'change');
+                    }
+                    else{
+                            k.checked=false;
+                        }
+                       
+                    }
+                    //Hvis "is-active"=>k.checked true , ellers k.checked false
+                }
+            })}
+    if(via=="Vælg alle"){
+        viadrop.appendChild(node);
+        let breakline=document.createElement("hr");
+        //Horisontal linje efter Vælg alle
+        breakline.classList.add("dropdown-divider");
+        viadrop.appendChild(breakline)
+        }
+    else{
+        viadrop.appendChild(node);
+    }
+}
+
+viadrop.childNodes[1].addEventListener("click",function(){
+    viaarray=Array.from(viadrop.getElementsByTagName("a"))
+    viaarray.forEach((c)=>{
+        if (Array.from(viadrop.childNodes[1].classList).indexOf("is-active")!==-1){
+            c.classList.add("is-active");
+        }
+        else{
+            c.classList.remove("is-active");
+        }
+        }
+       
+    )})
+//#endregion
+
+//Discovery dropdown
+//#region
+let dislist=["Vælg alle","6'eren","Animal Planet","Canal 9","Discovery Channel","Discovery Science","Eurosport 1","Eurosport 2","ID-Investigation Discovery","Kanal 4","Kanal 5","TLC"];
+let disdrop=document.querySelector("#disdropchild");
+
+for (let dis of dislist){
+    let node=document.createElement("a");
+    let text=document.createTextNode(dis);
+    node.appendChild(text);
+    node.classList.add("dropdown-item");
+    if(dis!=="Vælg alle"){
+        node.addEventListener("click",function(){
+            let kan=document.getElementsByName("Kanal");
+                for (let k of kan){
+                    if (k.value==dis){
+                        k.checked = !k.checked;
+                        triggerEvent(k, 'change');
+                    }
+                    }
+            if(Array.from(disdrop.childNodes).slice(2).every(item => item.classList.contains("is-active"))){
+                disdrop.childNodes[1].click();
+            }
+            if(!Array.from(disdrop.childNodes).slice(2).every(item => item.classList.contains("is-active"))){
+                disdrop.childNodes[1].classList.remove("is-active");
+            }
+                })
+    }
+    else{
+        node.addEventListener("click",function(){
+            node.classList.toggle("is-active");
+            let kan=document.getElementsByName("Kanal");
+            for (let k of kan){
+                if (dislist.includes(k.value)){
+                    if(node.classList.contains("is-active")){
+                        k.checked=true;
+                        triggerEvent(k, 'change');
+                    }
+                    else{
+                            k.checked=false;
+                        }
+                       
+                    }
+                    //Hvis "is-active"=>k.checked true , ellers k.checked false
+                }
+            })}
+    if(dis=="Vælg alle"){
+        disdrop.appendChild(node);
+        let breakline=document.createElement("hr");
+        //Horisontal linje efter Vælg alle
+        breakline.classList.add("dropdown-divider");
+        disdrop.appendChild(breakline)
+        }
+    else{
+        disdrop.appendChild(node);
+    }
+    
+}
+
+disdrop.childNodes[1].addEventListener("click",function(){
+    disarray=Array.from(disdrop.getElementsByTagName("a"))
+    disarray.forEach((c)=>{
+        if (Array.from(disdrop.childNodes[1].classList).indexOf("is-active")!==-1){
+            c.classList.add("is-active");
+        }
+        else{
+            c.classList.remove("is-active");
+        }
+        }
+       
+    )})
+   
+//#endregion
+
+
 //Stofa knap
+//#region
 Stofaknap=document.querySelector("#Stofa");
 let clickedS=false;
-StofaKanaler=["TV2","TV2Charlie","TV3","TV3Puls","Kanal4","Kanal5","DK4","Folketinget","NRK1","NRK2","TV2Norge","SVT1","SVT2","TV4 Sverige","ZDF","NDR","Sport Live"];
+StofaKanaler=[];
+Stofadict=udbyderdict["StofaPakkeloesning_pakker"];
+for(k of Object.keys(Stofadict)){
+    if(Stofadict[k]=="0.0"){
+        StofaKanaler.push(k);
+    }
+}
+//StofaKanaler=["TV2","TV2Charlie","TV3","TV3Puls","Kanal4","Kanal5","DK4","Folketinget","NRK1","NRK2","TV2Norge","SVT1","SVT2","TV4 Sverige","ZDF","NDR","Sport Live"];
 Stofaknap.addEventListener("click",function(){
     let kan=document.getElementsByName("Kanal");
     if(clickedS==true){
@@ -135,86 +468,7 @@ Stofaknap.addEventListener("click",function(){
         }
 }
 })
-
-//TV2 knap
-TV2knap=document.querySelector("#TV2Knap");
-let clicked=false;
-TV2knap.addEventListener("click",function(){
-    let kan=document.getElementsByName("Kanal");
-    if(clicked==true){
-        clicked=false;
-        for (let k of kan){
-            if (k.value.includes("TV2")){
-                if(k.value.includes("TV2Play")||k.value.includes("TV2Norge")){
-
-                }
-                else{
-                k.checked=false;}
-            }
-        }}
-    else{
-        clicked=true;
-        for (let k of kan){
-            if (k.value.includes("TV2")){
-                if(k.value.includes("TV2Play")||k.value.includes("TV2Norge")){
-
-                }
-                else{
-                    k.checked=true;
-                }
-                
-            }
-
-        }
-}
-})
-
-//TV3 knap
-TV3knap=document.querySelector("#TV3Knap");
-let clicked3=false;
-TV3knap.addEventListener("click",function(){
-    let kan=document.getElementsByName("Kanal");
-    if(clicked3==true){
-        clicked3=false;
-        for (let k of kan){
-            if (k.value.includes("TV3")){
-                k.checked=false;
-            }
-        }}
-    else{
-        clicked3=true;
-        for (let k of kan){
-            if (k.value.includes("TV3")){
-                k.checked=true;
-            }
-
-        }
-}
-})
-
-//Discovery knap
-DisKnap=document.querySelector("#DiscoveryKnap");
-let clickeddis=false;
-let diskanaler=["Kanal4","Kanal5","6eren","Canal9","TLC","DiscoveryChannel","Animalplanet","Eurosport1","Eurosport2","DiscoveryScience","ID-InvestegationDiscovery"]
-DisKnap.addEventListener("click",function(){
-    let kan=document.getElementsByName("Kanal");
-    if(clickeddis==true){
-        clickeddis=false;
-        for (let k of kan){
-            if (diskanaler.includes(k.value)){
-                k.checked=false;
-            }
-        }}
-    else{
-        clickeddis=true;
-        for (let k of kan){
-            if (diskanaler.includes(k.value)){
-                k.checked=true;
-            }
-
-        }
-}
-})
+//#endregion
 
 //Ryd knap
 let ryd = document.querySelector("#ryd");
@@ -222,10 +476,15 @@ ryd.addEventListener("click",function(){
     let kan=document.getElementsByName("Kanal");
         for (let k of kan){
                 k.checked=false;
+                triggerEvent(k, 'change');
+                TV2drop.childNodes[1].classList.remove("is-active");
+                viadrop.childNodes[1].classList.remove("is-active");
+                disdrop.childNodes[1].classList.remove("is-active");
             }
 })
 
 //Feedback knap
+//#region
 let newwindow = null;
 
 function openWindow(mailtoLink) {
@@ -281,21 +540,31 @@ feedbackknap.addEventListener("click", function () {
     }
   });
 });
-
+//#endregion
 
 //Kampagne-knap
+
+//#region
 let Kampagneknap=document.querySelector("#btn2");
 Kampagneknap.addEventListener("click",function(){
     Swal.fire({
         customClass:"kampagne",
         title: 'Kampagner',
-        html: '<img src="kampagner.png">',
+        html: '<div id="kbillede"> <img alt="kampagne" src="kampagner.png"></div>',
+        position:"top",
         confirmButtonText: 'OK'
       });
 })
 
+function triggerEvent (element, eventName) {
+    var event = new Event(eventName);
+    element.dispatchEvent(event);
+  }
+
+//#endregion
 
 //Tilføj kanaler
+//#region
 for (let i=0;i<names.length;i++) {
     let side=left;
     if (i>=names.length/4){
@@ -317,27 +586,78 @@ for (let i=0;i<names.length;i++) {
     let hiddeninfo=document.createElement("div");
     hiddeninfo.classList.add("hidden");
     if(names[i] in beskrivelser[0]){
-        hiddeninfo.innerHTML="<span class='bigtext'>"+prettynames[i]+"</span>"+":<br>"+beskrivelser[0][names[i]];
+        hiddeninfo.innerHTML="<span class='bigtext'>"+names[i]+"</span>"+":<br>"+beskrivelser[0][names[i]];
     }
     else{
-        hiddeninfo.innerHTML="<span class='bigtext'>"+prettynames[i]+"</span>"+":<br> Info her";
+        hiddeninfo.innerHTML="<span class='bigtext'>"+names[i]+"</span>"+":<br> Info her";
     }
     let mycheck = document.createElement("input");
     mycheck.setAttribute("type","checkbox");
     mycheck.setAttribute("name","Kanal");
     mycheck.setAttribute("value",names[i]);
     mycheck.setAttribute("id","checkbox");
+    mycheck.addEventListener("change",function(){
+        if(this.checked){
+            //Hvis TV2 kanal
+            if (TV2list.indexOf(names[i])!==-1){
+                TV2drop.childNodes.forEach(function(child){
+                    if (child.text==String(names[i])){
+                        child.classList.add("is-active")
+                    }
+                })
+            }
+            //Viaplay
+            if (vialist.indexOf(names[i])!==-1){
+                viadrop.childNodes.forEach(function(child){
+                    if (child.text==String(names[i])){
+                        child.classList.add("is-active")
+                    }
+                })
+            }
+            //Discovery
+            if (dislist.indexOf(names[i])!==-1){
+                disdrop.childNodes.forEach(function(child){
+                    if (child.text==String(names[i])){
+                        child.classList.add("is-active")
+                    }
+                })
+            }
+        }
+        else{
+            //TV2
+            if (TV2list.indexOf(names[i])!==-1){
+                TV2drop.childNodes.forEach(function(child){
+                    if (child.text==String(names[i])){
+                        child.classList.remove("is-active")
+                    }
+                })
+            }
+            //Viaplay
+            if (vialist.indexOf(names[i])!==-1){
+                viadrop.childNodes.forEach(function(child){
+                    if (child.text==String(names[i])){
+                        child.classList.remove("is-active")
+                    }
+                })
+            }
+            //Discovery
+            if (dislist.indexOf(names[i])!==-1){
+                disdrop.childNodes.forEach(function(child){
+                    if (child.text==String(names[i])){
+                        child.classList.remove("is-active")
+                    }
+                })
+            }
+            }
+    })
     let label = document.createElement('label');
-    label.appendChild(document.createTextNode(prettynames[i]));
+    label.appendChild(document.createTextNode(names[i]));
     label.classList.add("is-size-5");
     label.setAttribute("id","navn");
     //label.style.setProperty("font-size","17px");
     label.addEventListener("click",function(){
-        if(mycheck.checked==true){
-            mycheck.checked=false;}
-        else{
-            mycheck.checked=true;
-        }
+        mycheck.checked = !mycheck.checked;
+        triggerEvent(mycheck, 'change');
     })
 
     let pointtal=document.createElement("div");
@@ -345,7 +665,8 @@ for (let i=0;i<names.length;i++) {
     pointtal.classList.add("hidden");
     //Stofa pointknap
     let stofaaktiv=false; 
-    let kanaler=[{TV2:0,TV2Charlie:0,TV2Fri:1,TV2News:1,TV2Sport:2,TV2SportX:2,TV2Echo:1,TV3:0,TV3Max:2,"TV3 +":3,TV3Puls:0,TV3Sport:3,Kanal4:0,Kanal5:0,'6eren':1,Canal9:1,DiscoveryChannel:1,DK4:0,NationalGeographic:1,'3Sat':1,AlJazeera:1,Animalplanet:1,ARD:"Løsning ikke mulig",ARTE:1,BBCBrit:1,BBCEarth:1,BBCWorldNews:1,BlueHustler:1,Boomerang:1,CartoonNetwork:1,CBSReality:1,CNN:1,DisneyChannel:1,DisneyJunior:1,Euronews:1,Eurosport1:1,Eurosport2:2,"ID-InvestegationDiscovery":1,Mezzo:1,MTV:1,MTV80s:1,MTV90s:1,MTVHits:1,NationalGeographicWild:1,NDR:0,"Nick jr.":1,Nickelodeon:1,NRK1:0,ZDF:0,SVT1:0,Folketinget:0,NRK2:0,"TV4 Sverige":0,SVT2:0,"TV2Norge":0,ProSieben:1,"Rai 1":1,See:2,TLC:1,VH1:1,"V sport golf":1,"Viasat Explore":1,"Viasat History":1,"Viasat Nature":1,DiscoveryScience:1,"ESC/ESC1":1,"Extreme Sport":1,"HRT-TV1":1,MTVClub:1,MTVLive:1,Polonia:1,"Sport Live":1}];
+    let kanaler=[udbyderdict["StofaVaelgSelv_point"]];
+    //[{TV2:0,TV2Charlie:0,TV2Fri:1,TV2News:1,TV2Sport:2,TV2SportX:2,TV2Echo:1,TV3:0,TV3Max:2,"TV3 +":3,TV3Puls:0,TV3Sport:3,Kanal4:0,Kanal5:0,'6eren':1,Canal9:1,DiscoveryChannel:1,DK4:0,NationalGeographic:1,'3Sat':1,AlJazeera:1,Animalplanet:1,ARD:"Løsning ikke mulig",ARTE:1,BBCBrit:1,BBCEarth:1,BBCWorldNews:1,BlueHustler:1,Boomerang:1,CartoonNetwork:1,CBSReality:1,CNN:1,DisneyChannel:1,DisneyJunior:1,Euronews:1,Eurosport1:1,Eurosport2:2,"ID-InvestegationDiscovery":1,Mezzo:1,MTV:1,MTV80s:1,MTV90s:1,MTVHits:1,NationalGeographicWild:1,NDR:0,"Nick jr.":1,Nickelodeon:1,NRK1:0,ZDF:0,SVT1:0,Folketinget:0,NRK2:0,"TV4 Sverige":0,SVT2:0,"TV2Norge":0,ProSieben:1,"Rai 1":1,See:2,TLC:1,VH1:1,"V sport golf":1,"Viasat Explore":1,"Viasat History":1,"Viasat Nature":1,DiscoveryScience:1,"ESC/ESC1":1,"Extreme Sport":1,"HRT-TV1":1,MTVClub:1,MTVLive:1,Polonia:1,"Sport Live":1}];
     kanaler.sort();
     let pointknap=document.querySelector("#pointknap");
     pointknap.addEventListener("click",function(){
@@ -365,7 +686,7 @@ for (let i=0;i<names.length;i++) {
             pointtal.classList.toggle("hidden");
         }
         if(kanaler[0][names[i]]!=="Løsning ikke mulig"){
-            pointtal.innerHTML="("+kanaler[0][names[i]]+")";
+            pointtal.innerHTML="("+Number(kanaler[0][names[i]])+")";
         }
         else{
             pointtal.innerHTML='\u00A0'
@@ -373,7 +694,8 @@ for (let i=0;i<names.length;i++) {
     })
 
     //Norlys knap
-    let kanalpriser=[{TV2:49,TV2Charlie:39,TV2Fri:39,TV2News:39,TV2Sport:39,TV2SportX:39,TV2Echo:39,TV3:49,TV3Max:39,"TV3 +":99,TV3Puls:39,TV3Sport:49,Kanal4:39,Kanal5:49,'6eren':39,Canal9:39,DiscoveryChannel:29,DK4:29,NationalGeographic:29,'3Sat':"Løsning ikke mulig",AlJazeera:"Løsning ikke mulig",Animalplanet:29,ARD:0,ARTE:"Løsning ikke mulig",BBCBrit:"Løsning ikke mulig",BBCEarth:"Løsning ikke mulig",BBCWorldNews:"Løsning ikke mulig",BlueHustler:"Løsning ikke mulig",Boomerang:"Løsning ikke mulig",CartoonNetwork:"Løsning ikke mulig",CBSReality:"Løsning ikke mulig",CNN:"Løsning ikke mulig",DisneyChannel:29,DisneyJunior:29,Euronews:"Løsning ikke mulig",Eurosport1:29,Eurosport2:39,"ID-InvestegationDiscovery":29,Mezzo:"Løsning ikke mulig",MTV:"Løsning ikke mulig",MTV80s:"Løsning ikke mulig",MTV90s:"Løsning ikke mulig",MTVHits:"Løsning ikke mulig",NationalGeographicWild:"Løsning ikke mulig",NDR:0,"Nick jr.":"Løsning ikke mulig",Nickelodeon:29,NRK1:0,ZDF:0,SVT1:0,Folketinget:"Løsning ikke mulig",NRK2:"Løsning ikke mulig","TV4 Sverige":0,SVT2:0,"TV2Norge":0,ProSieben:"Løsning ikke mulig","Rai 1":"Løsning ikke mulig",See:39,TLC:29,VH1:29,"V sport golf":"Løsning ikke mulig","Viasat Explore":"Løsning ikke mulig","Viasat History":"Løsning ikke mulig","Viasat Nature":"Løsning ikke mulig",DiscoveryScience:"Løsning ikke mulig","ESC/ESC1":"Løsning ikke mulig","Extreme Sport":"Løsning ikke mulig","HRT-TV1":"Løsning ikke mulig",MTVClub:"Løsning ikke mulig",MTVLive:"Løsning ikke mulig",Polonia:"Løsning ikke mulig","Sport Live":"Løsning ikke mulig"}];
+    let kanalpriser=[udbyderdict["NorlysVaelgFritDTT_pris"]];
+    //[{TV2:49,TV2Charlie:39,TV2Fri:39,TV2News:39,TV2Sport:39,TV2SportX:39,TV2Echo:39,TV3:49,TV3Max:39,"TV3 +":99,TV3Puls:39,TV3Sport:49,Kanal4:39,Kanal5:49,'6eren':39,Canal9:39,DiscoveryChannel:29,DK4:29,NationalGeographic:29,'3Sat':"Løsning ikke mulig",AlJazeera:"Løsning ikke mulig",Animalplanet:29,ARD:0,ARTE:"Løsning ikke mulig",BBCBrit:"Løsning ikke mulig",BBCEarth:"Løsning ikke mulig",BBCWorldNews:"Løsning ikke mulig",BlueHustler:"Løsning ikke mulig",Boomerang:"Løsning ikke mulig",CartoonNetwork:"Løsning ikke mulig",CBSReality:"Løsning ikke mulig",CNN:"Løsning ikke mulig",DisneyChannel:29,DisneyJunior:29,Euronews:"Løsning ikke mulig",Eurosport1:29,Eurosport2:39,"ID-InvestegationDiscovery":29,Mezzo:"Løsning ikke mulig",MTV:"Løsning ikke mulig",MTV80s:"Løsning ikke mulig",MTV90s:"Løsning ikke mulig",MTVHits:"Løsning ikke mulig",NationalGeographicWild:"Løsning ikke mulig",NDR:0,"Nick jr.":"Løsning ikke mulig",Nickelodeon:29,NRK1:0,ZDF:0,SVT1:0,Folketinget:"Løsning ikke mulig",NRK2:"Løsning ikke mulig","TV4 Sverige":0,SVT2:0,"TV2Norge":0,ProSieben:"Løsning ikke mulig","Rai 1":"Løsning ikke mulig",See:39,TLC:29,VH1:29,"V sport golf":"Løsning ikke mulig","Viasat Explore":"Løsning ikke mulig","Viasat History":"Løsning ikke mulig","Viasat Nature":"Løsning ikke mulig",DiscoveryScience:"Løsning ikke mulig","ESC/ESC1":"Løsning ikke mulig","Extreme Sport":"Løsning ikke mulig","HRT-TV1":"Løsning ikke mulig",MTVClub:"Løsning ikke mulig",MTVLive:"Løsning ikke mulig",Polonia:"Løsning ikke mulig","Sport Live":"Løsning ikke mulig"}];
     kanalpriser.sort();
     let norlysaktiv=false;
     let prisknap=document.querySelector("#prisknap");
@@ -394,7 +716,7 @@ for (let i=0;i<names.length;i++) {
             pointtal.classList.toggle("hidden");
         }
         if(kanalpriser[0][names[i]]!=="Løsning ikke mulig"){
-            pointtal.innerHTML="("+kanalpriser[0][names[i]]+")";
+            pointtal.innerHTML="("+Number(kanalpriser[0][names[i]])+")";
         }
         else{
             pointtal.innerHTML='\u00A0'
@@ -412,11 +734,72 @@ for (let i=0;i<names.length;i++) {
     mellem.classList.add("mellem");
 
 }
+
+//#endregion
+
+
 //Streaming
-let stream=["TV2PlayBasis","TV2PlayFavoritSport","TV2PlayFavoritSport (Uden reklamer)","Disney+","HBOMax","NetflixStandard","NetflixPremium","NordiskFilm+","CMore","SkyShowtime","Discovery+underholdning","Discovery+Sport","Viaplay (Film og Serier)","Viaplay Total"];
+//Tilføj streaming
+let mystream="";
+    $.ajax({
+      contentType: "application/x-www-form-urlencoded;charset=utf-8",
+      async:false,
+      url: "https://raw.githubusercontent.com/CWJNor/kanalcsv/main/streaming.csv",
+      success: function(csv) {
+          const output = Papa.parse(csv, {
+            header: true, // Convert rows to Objects using headers as properties
+          });
+          if (output.data) {
+            mystream=output.data;
+          } else {
+            console.log(output.errors);
+          }
+      },
+      error: function(jqXHR, textStatus, errorThrow){
+          console.log(textStatus);
+      }
+    
+  });
+  let streamliste=[];
+  let streamdict={}
+
+
+  //Tilføj tjek om kanalen er i enten Stofa eller Norlys
+  //Hvis tom så ignorer
+for(v of mystream.slice(0,-1)){
+  let overskrift=Object.keys(v);
+  let streamnavn=v["Streamingtjeneste"];
+  overskrift.shift();
+  streamliste.push(streamnavn);
+  for (ov of overskrift){
+    if (!streamdict[ov]) {
+      streamdict[ov] = {};
+    }
+  if (v[ov].length==0){
+      v[ov]="Løsning ikke mulig";
+  }
+    streamdict[ov][streamnavn]=v[ov];
+  }
+}
+//kanalliste=kanalliste;
+streamliste.sort();
+
+for(key of Object.keys(streamdict)){
+const sortedObject = Object.fromEntries(
+    Object.entries(streamdict[key]).sort((a, b) => a[0].localeCompare(b[0]))
+    );
+    streamdict[key] = sortedObject;
+}
+
+//Streamingfirkanter tilføjes
+//let stream=["TV2PlayBasis","TV2PlayFavoritSport","TV2PlayFavoritSport (Uden reklamer)","Disney+","HBOMax","NetflixStandard","NetflixPremium","NordiskFilm+","CMore","SkyShowtime","Discovery+underholdning","Discovery+Sport","Viaplay (Film og Serier)","Viaplay Total"];
+let stream=streamliste;
 stream.sort();
-let streampretty=["TV2 PLAY Basis","TV2 PLAY Favorit+Sport","TV2 PLAY Favorit+Sport (u. reklamer)","Disney+","HBO Max","Netflix Standard","Netflix Premium","Nordisk Film+","C More","SkyShowtime","Discovery+ Underholdning","Discovery+ Sport","Viaplay (Film og Serier)","Viaplay Total"];
-streampretty.sort();
+
+//let stream=["TV2PlayBasis","TV2PlayFavoritSport","TV2PlayFavoritSport (Uden reklamer)","Disney+","HBOMax","NetflixStandard","NetflixPremium","NordiskFilm+","CMore","SkyShowtime","Discovery+underholdning","Discovery+Sport","Viaplay (Film og Serier)","Viaplay Total"];
+//stream.sort();
+//let streampretty=["TV2 PLAY Basis","TV2 PLAY Favorit+Sport","TV2 PLAY Favorit+Sport (u. reklamer)","Disney+","HBO Max","Netflix Standard","Netflix Premium","Nordisk Film+","C More","SkyShowtime","Discovery+ Underholdning","Discovery+ Sport","Viaplay (Film og Serier)","Viaplay Total"];
+//streampretty.sort();
 let streamcol1 = document.querySelector(".streamcol1");
 let streamcol2 = document.querySelector(".streamcol2");
 let streamcol3 = document.querySelector(".streamcol3");
@@ -443,16 +826,19 @@ for (let i=0;i<stream.length;i++) {
     mycheck.setAttribute("value",stream[i]);
     mycheck.setAttribute("id","checkbox");
     let label = document.createElement('label');
-    label.appendChild(document.createTextNode(streampretty[i]));
+    label.appendChild(document.createTextNode(stream[i]));
     label.setAttribute("id","navn");
     label.classList.add("is-size-5");
     //label.style.setProperty("font-size","17px");
     label.addEventListener("click",function(){
-        if(mycheck.checked==true){
-            mycheck.checked=false;}
-        else{
-            mycheck.checked=true;
-        }
+        mycheck.checked = !mycheck.checked;
+        //triggerEvent(mycheck, 'change');
+
+        //if(mycheck.checked==true){
+        //    mycheck.checked=false;}
+        //else{
+        //    mycheck.checked=true;
+        //}
     })
 
     let pointtal=document.createElement("div");
@@ -460,7 +846,8 @@ for (let i=0;i<stream.length;i++) {
     pointtal.classList.add("hidden");
     //Stofa pointknap
     let stofaaktiv=false; 
-    let streamnavn=[{TV2PlayBasis:2,TV2PlayFavoritSport:8,"TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:4,NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":3,CMore:5,SkyShowtime:"Løsning ikke mulig","Discovery+underholdning":2,"Discovery+Sport":8,"Viaplay (Film og Serier)":6,"Viaplay Total":"Løsning ikke mulig"}]; 
+    let streamnavn=[streamdict["StofaVaelgSelv_point"]]
+    //[{TV2PlayBasis:2,TV2PlayFavoritSport:8,"TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:4,NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":3,CMore:5,SkyShowtime:"Løsning ikke mulig","Discovery+underholdning":2,"Discovery+Sport":8,"Viaplay (Film og Serier)":6,"Viaplay Total":"Løsning ikke mulig"}]; 
     streamnavn.sort();
     let pointknap=document.querySelector("#pointknap");
     pointknap.addEventListener("click",function(){
@@ -478,14 +865,15 @@ for (let i=0;i<stream.length;i++) {
         }
         //pointknap.classList.toggle("is-primary");
         if(streamnavn[0][stream[i]]!=="Løsning ikke mulig"){
-            pointtal.innerHTML="("+streamnavn[0][stream[i]]+")";
+            pointtal.innerHTML="("+Number(streamnavn[0][stream[i]])+")";
         }
         else{
             pointtal.innerHTML='\u00A0'
         }
     })
     //Norlys prisknap
-    let streamNor=[{TV2PlayBasis:"Løsning ikke mulig",TV2PlayFavoritSport:"Løsning ikke mulig","TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:"Løsning ikke mulig",NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":"Løsning ikke mulig",CMore:"Løsning ikke mulig",SkyShowtime:"Løsning ikke mulig","Discovery+underholdning":"Løsning ikke mulig","Discovery+Sport":"Løsning ikke mulig","Viaplay (Film og Serier)":"Løsning ikke mulig","Viaplay Total":"Løsning ikke mulig"}];
+    let streamNor=[streamdict["NorlysVaelgFritDTT_pris"]]
+    //[{TV2PlayBasis:"Løsning ikke mulig",TV2PlayFavoritSport:"Løsning ikke mulig","TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:"Løsning ikke mulig",NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":"Løsning ikke mulig",CMore:"Løsning ikke mulig",SkyShowtime:"Løsning ikke mulig","Discovery+underholdning":"Løsning ikke mulig","Discovery+Sport":"Løsning ikke mulig","Viaplay (Film og Serier)":"Løsning ikke mulig","Viaplay Total":"Løsning ikke mulig"}];
     streamNor.sort();
     let norlysaktiv=false;
     let prisknap=document.querySelector("#prisknap");
@@ -504,7 +892,7 @@ for (let i=0;i<stream.length;i++) {
         }
         //prisknap.classList.toggle("is-primary");
         if(streamNor[0][stream[i]]!=="Løsning ikke mulig"){
-            pointtal.innerHTML="("+streamNor[0][stream[i]]+")";
+            pointtal.innerHTML="("+Number(streamNor[0][stream[i]])+")";
         }
         else{
             pointtal.innerHTML='\u00A0'
@@ -523,21 +911,94 @@ for (let i=0;i<stream.length;i++) {
 }
 
 //UDREGNER PRISER
-let streampris=[{"TV2PlayBasis":69,"TV2PlayFavoritSport":189,"TV2PlayFavoritSport (Uden reklamer)":219,"Disney+":79,"HBOMax":79,"NetflixStandard":114,"NetflixPremium":149,"NordiskFilm+":49,"CMore":99,"SkyShowtime":69,"Discovery+underholdning":79,"Discovery+Sport":129,"Viaplay (Film og Serier)":129,"Viaplay Total":449}];
+let streampris=[{"TV2 PLAY Basis":69,"TV2 PLAY Favorit+Sport":189,"TV2 PLAY Favorit+Sport (u. reklamer)":219,"Disney+":79,"HBO Max":79,"Netflix Standard":114,"Netflix Premium":149,"Nordisk Film+":49,"C More":99,"SkyShowtime":69,"Discovery+ Underholdning":79,"Discovery+ Sport":129,"Viaplay (Film og Serier)":129,"Viaplay Total":449}];
 streampris.sort();
 
+//Importerer pakkepriser
+let mypakke="";
+    $.ajax({
+      contentType: "application/x-www-form-urlencoded;charset=utf-8",
+      async:false,
+      url: "https://raw.githubusercontent.com/CWJNor/kanalcsv/main/Pakkepriser.csv",
+      success: function(csv) {
+          const output = Papa.parse(csv, {
+            header: true, // Convert rows to Objects using headers as properties
+          });
+          if (output.data) {
+            mypakke=output.data;
+          } else {
+            console.log(output.errors);
+          }
+      },
+      error: function(jqXHR, textStatus, errorThrow){
+          console.log(textStatus);
+      }
+    
+  });
+  let pakkeliste=[];
+  let pakkedict={}
+
+
+  //Tilføj tjek om kanalen er i enten Stofa eller Norlys
+  //Hvis tom så ignorer
+for(v of mypakke.slice(0,-1)){
+  let overskrift=Object.keys(v);
+  let pakkenavn=v["Pakke"];
+  overskrift.shift();
+  pakkeliste.push(pakkenavn);
+  for (ov of overskrift){
+    if (!pakkedict[ov]) {
+      pakkedict[ov] = {};
+    }
+  if (v[ov].length==0){
+      v[ov]="Løsning ikke mulig";
+  }
+  pakkedict[ov][pakkenavn]=v[ov];
+  }
+}
+//kanalliste=kanalliste;
+pakkeliste.sort();
+
+for(key of Object.keys(pakkedict)){
+const sortedObject = Object.fromEntries(
+    Object.entries(pakkedict[key]).sort((a, b) => a[0].localeCompare(b[0]))
+    );
+    pakkedict[key] = sortedObject;
+}
+
+//Streamingfirkanter tilføjes
+//let stream=["TV2PlayBasis","TV2PlayFavoritSport","TV2PlayFavoritSport (Uden reklamer)","Disney+","HBOMax","NetflixStandard","NetflixPremium","NordiskFilm+","CMore","SkyShowtime","Discovery+underholdning","Discovery+Sport","Viaplay (Film og Serier)","Viaplay Total"];
+let pakkepris=pakkeliste;
+pakkepris.sort();
 
 //DTT
 //Norlys Vælg Frit
 let NVFfunc=function(){
     let ikkem=[];
     let streamlist=[];
-    let kanaler=[{TV2:49,TV2Charlie:39,TV2Fri:39,TV2News:39,TV2Sport:39,TV2SportX:39,TV2Echo:39,TV3:49,TV3Max:39,"TV3 +":99,TV3Puls:39,TV3Sport:49,Kanal4:39,Kanal5:49,'6eren':39,Canal9:39,DiscoveryChannel:29,DK4:29,NationalGeographic:29,'3Sat':"Løsning ikke mulig",AlJazeera:"Løsning ikke mulig",Animalplanet:29,ARD:0,ARTE:"Løsning ikke mulig",BBCBrit:"Løsning ikke mulig",BBCEarth:"Løsning ikke mulig",BBCWorldNews:"Løsning ikke mulig",BlueHustler:"Løsning ikke mulig",Boomerang:"Løsning ikke mulig",CartoonNetwork:"Løsning ikke mulig",CBSReality:"Løsning ikke mulig",CNN:"Løsning ikke mulig",DisneyChannel:29,DisneyJunior:29,Euronews:"Løsning ikke mulig",Eurosport1:29,Eurosport2:39,"ID-InvestegationDiscovery":29,Mezzo:"Løsning ikke mulig",MTV:"Løsning ikke mulig",MTV80s:"Løsning ikke mulig",MTV90s:"Løsning ikke mulig",MTVHits:"Løsning ikke mulig",NationalGeographicWild:"Løsning ikke mulig",NDR:0,"Nick jr.":"Løsning ikke mulig",Nickelodeon:29,NRK1:0,ZDF:0,SVT1:0,Folketinget:"Løsning ikke mulig",NRK2:"Løsning ikke mulig","TV4 Sverige":0,SVT2:0,"TV2Norge":0,ProSieben:"Løsning ikke mulig","Rai 1":"Løsning ikke mulig",See:39,TLC:29,VH1:29,"V sport golf":"Løsning ikke mulig","Viasat Explore":"Løsning ikke mulig","Viasat History":"Løsning ikke mulig","Viasat Nature":"Løsning ikke mulig",DiscoveryScience:"Løsning ikke mulig","ESC/ESC1":"Løsning ikke mulig","Extreme Sport":"Løsning ikke mulig","HRT-TV1":"Løsning ikke mulig",MTVClub:"Løsning ikke mulig",MTVLive:"Løsning ikke mulig",Polonia:"Løsning ikke mulig","Sport Live":"Løsning ikke mulig"}];
-    let stream=[{TV2PlayBasis:"Løsning ikke mulig",TV2PlayFavoritSport:"Løsning ikke mulig","TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:"Løsning ikke mulig",NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":"Løsning ikke mulig",CMore:"Løsning ikke mulig",SkyShowtime:"Løsning ikke mulig","Discovery+underholdning":"Løsning ikke mulig","Discovery+Sport":"Løsning ikke mulig","Viaplay (Film og Serier)":"Løsning ikke mulig","Viaplay Total":"Løsning ikke mulig"}];
+    let kanaler=[udbyderdict["NorlysVaelgFritDTT_pris"]];
+    //[{TV2:49,TV2Charlie:39,TV2Fri:39,TV2News:39,TV2Sport:39,TV2SportX:39,TV2Echo:39,TV3:49,TV3Max:39,"TV3 +":99,TV3Puls:39,TV3Sport:49,Kanal4:39,Kanal5:49,'6eren':39,Canal9:39,DiscoveryChannel:29,DK4:29,NationalGeographic:29,'3Sat':"Løsning ikke mulig",AlJazeera:"Løsning ikke mulig",Animalplanet:29,ARD:0,ARTE:"Løsning ikke mulig",BBCBrit:"Løsning ikke mulig",BBCEarth:"Løsning ikke mulig",BBCWorldNews:"Løsning ikke mulig",BlueHustler:"Løsning ikke mulig",Boomerang:"Løsning ikke mulig",CartoonNetwork:"Løsning ikke mulig",CBSReality:"Løsning ikke mulig",CNN:"Løsning ikke mulig",DisneyChannel:29,DisneyJunior:29,Euronews:"Løsning ikke mulig",Eurosport1:29,Eurosport2:39,"ID-InvestegationDiscovery":29,Mezzo:"Løsning ikke mulig",MTV:"Løsning ikke mulig",MTV80s:"Løsning ikke mulig",MTV90s:"Løsning ikke mulig",MTVHits:"Løsning ikke mulig",NationalGeographicWild:"Løsning ikke mulig",NDR:0,"Nick jr.":"Løsning ikke mulig",Nickelodeon:29,NRK1:0,ZDF:0,SVT1:0,Folketinget:"Løsning ikke mulig",NRK2:"Løsning ikke mulig","TV4 Sverige":0,SVT2:0,"TV2Norge":0,ProSieben:"Løsning ikke mulig","Rai 1":"Løsning ikke mulig",See:39,TLC:29,VH1:29,"V sport golf":"Løsning ikke mulig","Viasat Explore":"Løsning ikke mulig","Viasat History":"Løsning ikke mulig","Viasat Nature":"Løsning ikke mulig",DiscoveryScience:"Løsning ikke mulig","ESC/ESC1":"Løsning ikke mulig","Extreme Sport":"Løsning ikke mulig","HRT-TV1":"Løsning ikke mulig",MTVClub:"Løsning ikke mulig",MTVLive:"Løsning ikke mulig",Polonia:"Løsning ikke mulig","Sport Live":"Løsning ikke mulig"}];
+    let stream=[streamdict["NorlysVaelgFritDTT_pris"]];
+    let pakke=[pakkedict["NorlysVaelgFritDTT_pris"]]
+    //[{TV2PlayBasis:"Løsning ikke mulig",TV2PlayFavoritSport:"Løsning ikke mulig","TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:"Løsning ikke mulig",NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":"Løsning ikke mulig",CMore:"Løsning ikke mulig",SkyShowtime:"Løsning ikke mulig","Discovery+underholdning":"Løsning ikke mulig","Discovery+Sport":"Løsning ikke mulig","Viaplay (Film og Serier)":"Løsning ikke mulig","Viaplay Total":"Løsning ikke mulig"}];
     kanaler.sort();
     stream.sort();
     let NVF=0;
     let NVFstream=0;
+    Object.keys(kanaler[0]).forEach(navn=>{
+        if(kanaler[0][navn]!=="Løsning ikke mulig"){
+          kanaler[0][navn]=Number(kanaler[0][navn])
+        }
+      })
+    Object.keys(stream[0]).forEach(stnavn=>{
+        if(stream[0][stnavn]!=="Løsning ikke mulig"){
+          stream[0][stnavn]=Number(stream[0][stnavn])
+        }})
+    Object.keys(pakke[0]).forEach(pnavn=>{
+        if(pakke[0][pnavn]!=="Løsning ikke mulig"){
+            pakke[0][pnavn]=Number(pakke[0][pnavn])
+        }  
+    })
             for (let kanal of kanaler){
                 for (let k of Object.keys(kanal)){
                     if(values.includes(k)){
@@ -574,12 +1035,13 @@ let NVFfunc=function(){
                         }
                     }
         
-        let basepris=109+NVF;
+        let NVFpris=pakke[0]["Basispris"];
+        let basepris=NVFpris+NVF
         if(isNaN(NVF)){
             return "Løsning ikke mulig pga.:"+"<br>("+ikkem.join(", ")+")"
         }
         if(NVFstream==0){
-            return NVF+109+" kr.";
+            return basepris+" kr.";
         }
         else{
             return NVFstream+basepris+" kr. (inkl. tilkøb af "+streamlist.join(", ")+")"+"<br>"+basepris+" kr. (ekskl. "+streamlist.join(", ")+")";
@@ -589,12 +1051,30 @@ let NVFfunc=function(){
 let NVODTTfunc=function(){
     let ikkem=[];
     let streamlist=[];
-    let kanaler=[{TV2:1,TV2Charlie:1,TV2Fri:1,TV2News:1,TV2Sport:1,TV2SportX:1,TV2Echo:1,TV3:1,TV3Max:1,"TV3 +":1,TV3Puls:1,TV3Sport:1,Kanal4:1,Kanal5:1,'6eren':1,Canal9:1,DiscoveryChannel:1,DK4:1,NationalGeographic:1,'3Sat':"Løsning ikke mulig",AlJazeera:"Løsning ikke mulig",Animalplanet:1,ARD:0,ARTE:"Løsning ikke mulig",BBCBrit:"Løsning ikke mulig",BBCEarth:"Løsning ikke mulig",BBCWorldNews:"Løsning ikke mulig",BlueHustler:"Løsning ikke mulig",Boomerang:1,CartoonNetwork:1,CBSReality:"Løsning ikke mulig",CNN:1,DisneyChannel:1,DisneyJunior:1,Euronews:"Løsning ikke mulig",Eurosport1:1,Eurosport2:1,"ID-InvestegationDiscovery":1,Mezzo:"Løsning ikke mulig",MTV:"Løsning ikke mulig",MTV80s:"Løsning ikke mulig",MTV90s:"Løsning ikke mulig",MTVHits:"Løsning ikke mulig",NationalGeographicWild:"Løsning ikke mulig",NDR:0,"Nick jr.":"Løsning ikke mulig",Nickelodeon:1,NRK1:0,ZDF:0,SVT1:0,Folketinget:"Løsning ikke mulig",NRK2:"Løsning ikke mulig","TV4 Sverige":0,SVT2:0,"TV2Norge":0,ProSieben:"Løsning ikke mulig","Rai 1":"Løsning ikke mulig",See:1,TLC:1,VH1:1,"V sport golf":"Løsning ikke mulig","Viasat Explore":"Løsning ikke mulig","Viasat History":"Løsning ikke mulig","Viasat Nature":"Løsning ikke mulig",DiscoveryScience:"Løsning ikke mulig","ESC/ESC1":"Løsning ikke mulig","Extreme Sport":"Løsning ikke mulig","HRT-TV1":"Løsning ikke mulig",MTVClub:"Løsning ikke mulig",MTVLive:"Løsning ikke mulig",Polonia:"Løsning ikke mulig","Sport Live":1}];
-    let stream=[{TV2PlayBasis:1,TV2PlayFavoritSport:"Løsning ikke mulig","TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:1,NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":1,CMore:"Løsning ikke mulig",SkyShowtime:"Løsning ikke mulig","Discovery+underholdning":1,"Discovery+Sport":"Løsning ikke mulig","Viaplay (Film og Serier)":1,"Viaplay Total":"Løsning ikke mulig"}];
+    let kanaler=[udbyderdict["NorlysVaelg8DTT_binaer"]];
+    //[{TV2:1,TV2Charlie:1,TV2Fri:1,TV2News:1,TV2Sport:1,TV2SportX:1,TV2Echo:1,TV3:1,TV3Max:1,"TV3 +":1,TV3Puls:1,TV3Sport:1,Kanal4:1,Kanal5:1,'6eren':1,Canal9:1,DiscoveryChannel:1,DK4:1,NationalGeographic:1,'3Sat':"Løsning ikke mulig",AlJazeera:"Løsning ikke mulig",Animalplanet:1,ARD:0,ARTE:"Løsning ikke mulig",BBCBrit:"Løsning ikke mulig",BBCEarth:"Løsning ikke mulig",BBCWorldNews:"Løsning ikke mulig",BlueHustler:"Løsning ikke mulig",Boomerang:1,CartoonNetwork:1,CBSReality:"Løsning ikke mulig",CNN:1,DisneyChannel:1,DisneyJunior:1,Euronews:"Løsning ikke mulig",Eurosport1:1,Eurosport2:1,"ID-InvestegationDiscovery":1,Mezzo:"Løsning ikke mulig",MTV:"Løsning ikke mulig",MTV80s:"Løsning ikke mulig",MTV90s:"Løsning ikke mulig",MTVHits:"Løsning ikke mulig",NationalGeographicWild:"Løsning ikke mulig",NDR:0,"Nick jr.":"Løsning ikke mulig",Nickelodeon:1,NRK1:0,ZDF:0,SVT1:0,Folketinget:"Løsning ikke mulig",NRK2:"Løsning ikke mulig","TV4 Sverige":0,SVT2:0,"TV2Norge":0,ProSieben:"Løsning ikke mulig","Rai 1":"Løsning ikke mulig",See:1,TLC:1,VH1:1,"V sport golf":"Løsning ikke mulig","Viasat Explore":"Løsning ikke mulig","Viasat History":"Løsning ikke mulig","Viasat Nature":"Løsning ikke mulig",DiscoveryScience:"Løsning ikke mulig","ESC/ESC1":"Løsning ikke mulig","Extreme Sport":"Løsning ikke mulig","HRT-TV1":"Løsning ikke mulig",MTVClub:"Løsning ikke mulig",MTVLive:"Løsning ikke mulig",Polonia:"Løsning ikke mulig","Sport Live":1}];
+    let stream=[streamdict["NorlysVaelg8DTT_binaer"]];
+    //[{TV2PlayBasis:1,TV2PlayFavoritSport:"Løsning ikke mulig","TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:1,NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":1,CMore:"Løsning ikke mulig",SkyShowtime:"Løsning ikke mulig","Discovery+underholdning":1,"Discovery+Sport":"Løsning ikke mulig","Viaplay (Film og Serier)":1,"Viaplay Total":"Løsning ikke mulig"}];
+    let pakke=[pakkedict["NorlysVaelg8DTT_binaer"]]
     kanaler.sort();
     stream.sort();
     let NVODTT=0;
     let NVODTTstream=0;
+    Object.keys(kanaler[0]).forEach(navn=>{
+        if(kanaler[0][navn]!=="Løsning ikke mulig"){
+          kanaler[0][navn]=Number(kanaler[0][navn])
+        }
+      })
+      Object.keys(stream[0]).forEach(stnavn=>{
+        if(stream[0][stnavn]!=="Løsning ikke mulig"){
+          stream[0][stnavn]=Number(stream[0][stnavn])
+        }
+      })
+      Object.keys(pakke[0]).forEach(pnavn=>{
+        if(pakke[0][pnavn]!=="Løsning ikke mulig"){
+            pakke[0][pnavn]=Number(pakke[0][pnavn])
+        }  
+    })
             for (let kanal of kanaler){
                     for (let k of Object.keys(kanal)){
                         if(values.includes(k)){
@@ -624,13 +1104,13 @@ let NVODTTfunc=function(){
                             }
                             else{
                                 if(NVODTT!=="Løsning ikke mulig"){
-                                    console.log("Her");
                                     NVODTT=NVODTT+st[s];
                                 }
                             }
                         }
                     }
                 }
+        let basepris=pakke[0]["Basispris"];
         if(NVODTT=="Løsning ikke mulig"){
             return "Løsning ikke mulig pga.:"+"<br>("+ikkem.join(", ")+")";
         }
@@ -639,10 +1119,10 @@ let NVODTTfunc=function(){
                 return "Mere end 8 valgt"
             }
             if(NVODTTstream==0){
-                return 469+" kr."+" ("+NVODTT+" ud af 8 kanaler valgt)";
+                return basepris+" kr."+" ("+NVODTT+" ud af 8 kanaler valgt)";
             }
             else{
-                return NVODTTstream+469+" kr. (inkl. tilkøb af "+streamlist.join(", ")+")"+"<br>"+469+" kr. (ekskl. "+streamlist.join(", ")+") ("+NVODTT+" ud af 8 kanaler valgt)";
+                return NVODTTstream+basepris+" kr. (inkl. tilkøb af "+streamlist.join(", ")+")"+"<br>"+basepris+" kr. (ekskl. "+streamlist.join(", ")+") ("+NVODTT+" ud af 8 kanaler valgt)";
                  }
             }
 } 
@@ -650,13 +1130,31 @@ let NVODTTfunc=function(){
 let NVAfunc=function(){
     let ikkem=[];
     let streamlist=[];
-    let kanaler=[{TV2:1,TV2Charlie:1,TV2Fri:1,TV2News:1,TV2Sport:1,TV2SportX:1,TV2Echo:1,TV3:1,TV3Max:1,"TV3 +":1,TV3Puls:1,TV3Sport:1,Kanal4:1,Kanal5:1,'6eren':1,Canal9:1,DiscoveryChannel:1,DK4:1,NationalGeographic:1,'3Sat':"Løsning ikke mulig",AlJazeera:"Løsning ikke mulig",Animalplanet:1,ARD:0,ARTE:"Løsning ikke mulig",BBCBrit:"Løsning ikke mulig",BBCEarth:"Løsning ikke mulig",BBCWorldNews:"Løsning ikke mulig",BlueHustler:"Løsning ikke mulig",Boomerang:1,CartoonNetwork:1,CBSReality:"Løsning ikke mulig",CNN:1,DisneyChannel:1,DisneyJunior:1,Euronews:"Løsning ikke mulig",Eurosport1:1,Eurosport2:1,"ID-InvestegationDiscovery":1,Mezzo:"Løsning ikke mulig",MTV:"Løsning ikke mulig",MTV80s:"Løsning ikke mulig",MTV90s:"Løsning ikke mulig",MTVHits:"Løsning ikke mulig",NationalGeographicWild:"Løsning ikke mulig",NDR:0,"Nick jr.":"Løsning ikke mulig",Nickelodeon:1,NRK1:0,ZDF:0,SVT1:0,Folketinget:"Løsning ikke mulig",NRK2:"Løsning ikke mulig","TV4 Sverige":0,SVT2:0,"TV2Norge":0,ProSieben:"Løsning ikke mulig","Rai 1":"Løsning ikke mulig",See:1,TLC:1,VH1:1,"V sport golf":"Løsning ikke mulig","Viasat Explore":"Løsning ikke mulig","Viasat History":"Løsning ikke mulig","Viasat Nature":"Løsning ikke mulig",DiscoveryScience:"Løsning ikke mulig","ESC/ESC1":"Løsning ikke mulig","Extreme Sport":"Løsning ikke mulig","HRT-TV1":"Løsning ikke mulig",MTVClub:"Løsning ikke mulig",MTVLive:"Løsning ikke mulig",Polonia:"Løsning ikke mulig","Sport Live":1}];
-    let stream=[{TV2PlayBasis:1,TV2PlayFavoritSport:"Løsning ikke mulig","TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:79,NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":49,CMore:"Løsning ikke mulig",SkyShowtime:"Løsning ikke mulig","Discovery+underholdning":1,"Discovery+Sport":"Løsning ikke mulig","Viaplay (Film og Serier)":1,"Viaplay Total":1}];
+    let kanaler=[udbyderdict["NorlysVaelgAltDTT_binaer"]];
+    //[{TV2:1,TV2Charlie:1,TV2Fri:1,TV2News:1,TV2Sport:1,TV2SportX:1,TV2Echo:1,TV3:1,TV3Max:1,"TV3 +":1,TV3Puls:1,TV3Sport:1,Kanal4:1,Kanal5:1,'6eren':1,Canal9:1,DiscoveryChannel:1,DK4:1,NationalGeographic:1,'3Sat':"Løsning ikke mulig",AlJazeera:"Løsning ikke mulig",Animalplanet:1,ARD:0,ARTE:"Løsning ikke mulig",BBCBrit:"Løsning ikke mulig",BBCEarth:"Løsning ikke mulig",BBCWorldNews:"Løsning ikke mulig",BlueHustler:"Løsning ikke mulig",Boomerang:1,CartoonNetwork:1,CBSReality:"Løsning ikke mulig",CNN:1,DisneyChannel:1,DisneyJunior:1,Euronews:"Løsning ikke mulig",Eurosport1:1,Eurosport2:1,"ID-InvestegationDiscovery":1,Mezzo:"Løsning ikke mulig",MTV:"Løsning ikke mulig",MTV80s:"Løsning ikke mulig",MTV90s:"Løsning ikke mulig",MTVHits:"Løsning ikke mulig",NationalGeographicWild:"Løsning ikke mulig",NDR:0,"Nick jr.":"Løsning ikke mulig",Nickelodeon:1,NRK1:0,ZDF:0,SVT1:0,Folketinget:"Løsning ikke mulig",NRK2:"Løsning ikke mulig","TV4 Sverige":0,SVT2:0,"TV2Norge":0,ProSieben:"Løsning ikke mulig","Rai 1":"Løsning ikke mulig",See:1,TLC:1,VH1:1,"V sport golf":"Løsning ikke mulig","Viasat Explore":"Løsning ikke mulig","Viasat History":"Løsning ikke mulig","Viasat Nature":"Løsning ikke mulig",DiscoveryScience:"Løsning ikke mulig","ESC/ESC1":"Løsning ikke mulig","Extreme Sport":"Løsning ikke mulig","HRT-TV1":"Løsning ikke mulig",MTVClub:"Løsning ikke mulig",MTVLive:"Løsning ikke mulig",Polonia:"Løsning ikke mulig","Sport Live":1}];
+    let stream=[streamdict["NorlysVaelgAltDTT_binaer"]];
+    //[{TV2PlayBasis:1,TV2PlayFavoritSport:"Løsning ikke mulig","TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:79,NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":49,CMore:"Løsning ikke mulig",SkyShowtime:"Løsning ikke mulig","Discovery+underholdning":1,"Discovery+Sport":"Løsning ikke mulig","Viaplay (Film og Serier)":1,"Viaplay Total":1}];
+    let pakke=[pakkedict["NorlysVaelgAltDTT_binaer"]]
     kanaler.sort();
     stream.sort();
     let NVA=0;
     let NVAstream=0;
     let HBO=0;
+    Object.keys(kanaler[0]).forEach(navn=>{
+        if(kanaler[0][navn]!=="Løsning ikke mulig"){
+          kanaler[0][navn]=Number(kanaler[0][navn])
+        }
+      })
+      Object.keys(stream[0]).forEach(stnavn=>{
+        if(stream[0][stnavn]!=="Løsning ikke mulig"){
+          stream[0][stnavn]=Number(stream[0][stnavn])
+        }
+      })
+      Object.keys(pakke[0]).forEach(pnavn=>{
+        if(pakke[0][pnavn]!=="Løsning ikke mulig"){
+            pakke[0][pnavn]=Number(pakke[0][pnavn])
+        }  
+    })
             for (let kanal of kanaler){
                     for (let k of Object.keys(kanal)){
                         if(values.includes(k)){
@@ -687,12 +1185,13 @@ let NVAfunc=function(){
                         }
                     }
                 }
-        let basepris=729+HBO;
+        let NVApris=pakke[0]["Basispris"]
+        let basepris=NVApris+HBO;
         if(NVA=="Løsning ikke mulig"){
             return "Løsning ikke mulig pga.: <br>("+ikkem.join(", ")+")";
         }
         if(NVAstream==0){
-            return 729+HBO+" kr.";
+            return basepris+" kr.";
         }
         else{
             return NVAstream+basepris+" kr. (inkl. tilkøb af "+streamlist.join(", ")+")"+"<br>"+basepris+" kr. (ekskl. "+streamlist.join(", ")+")";
@@ -704,13 +1203,31 @@ let NVAfunc=function(){
 let NV4func=function(){
     let ikkem=[];
     let streamlist=[];
-    let kanaler=[{TV2:1,TV2Charlie:1,TV2Fri:1,TV2News:1,TV2Sport:1,TV2SportX:1,TV2Echo:1,TV3:1,TV3Max:1,"TV3 +":1,TV3Puls:1,TV3Sport:1,Kanal4:1,Kanal5:1,'6eren':1,Canal9:1,DiscoveryChannel:1,DK4:1,NationalGeographic:1,'3Sat':"Løsning ikke mulig",AlJazeera:1,Animalplanet:1,ARD:0,ARTE:"Løsning ikke mulig",BBCBrit:"Løsning ikke mulig",BBCEarth:"Løsning ikke mulig",BBCWorldNews:1,BlueHustler:"Løsning ikke mulig",Boomerang:1,CartoonNetwork:1,CBSReality:1,CNN:1,DisneyChannel:1,DisneyJunior:1,Euronews:1,Eurosport1:1,Eurosport2:1,"ID-InvestegationDiscovery":1,Mezzo:1,MTV:1,MTV80s:1,MTV90s:1,MTVHits:1,NationalGeographicWild:1,NDR:0,"Nick jr.":1,Nickelodeon:1,NRK1:0,ZDF:0,SVT1:0,Folketinget:0,NRK2:"Løsning ikke mulig","TV4 Sverige":0,SVT2:0,"TV2Norge":0,ProSieben:"Løsning ikke mulig","Rai 1":1,See:1,TLC:1,VH1:1,"V sport golf":1,"Viasat Explore":1,"Viasat History":1,"Viasat Nature":1,DiscoveryScience:1,"ESC/ESC1":"Løsning ikke mulig","Extreme Sport":"Løsning ikke mulig","HRT-TV1":"Løsning ikke mulig",MTVClub:1,MTVLive:1,Polonia:"Løsning ikke mulig","Sport Live":1}];
-    let stream=[{TV2PlayBasis:1,TV2PlayFavoritSport:"Løsning ikke mulig","TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:1,NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":1,CMore:"Løsning ikke mulig",SkyShowtime:"Løsning ikke mulig","Discovery+underholdning":1,"Discovery+Sport":"Løsning ikke mulig","Viaplay (Film og Serier)":1,"Viaplay Total":"Løsning ikke mulig"}];
+    let kanaler=[udbyderdict["NorlysVaelg4OTT_binaer"]];
+    //[{TV2:1,TV2Charlie:1,TV2Fri:1,TV2News:1,TV2Sport:1,TV2SportX:1,TV2Echo:1,TV3:1,TV3Max:1,"TV3 +":1,TV3Puls:1,TV3Sport:1,Kanal4:1,Kanal5:1,'6eren':1,Canal9:1,DiscoveryChannel:1,DK4:1,NationalGeographic:1,'3Sat':"Løsning ikke mulig",AlJazeera:1,Animalplanet:1,ARD:0,ARTE:"Løsning ikke mulig",BBCBrit:"Løsning ikke mulig",BBCEarth:"Løsning ikke mulig",BBCWorldNews:1,BlueHustler:"Løsning ikke mulig",Boomerang:1,CartoonNetwork:1,CBSReality:1,CNN:1,DisneyChannel:1,DisneyJunior:1,Euronews:1,Eurosport1:1,Eurosport2:1,"ID-InvestegationDiscovery":1,Mezzo:1,MTV:1,MTV80s:1,MTV90s:1,MTVHits:1,NationalGeographicWild:1,NDR:0,"Nick jr.":1,Nickelodeon:1,NRK1:0,ZDF:0,SVT1:0,Folketinget:0,NRK2:"Løsning ikke mulig","TV4 Sverige":0,SVT2:0,"TV2Norge":0,ProSieben:"Løsning ikke mulig","Rai 1":1,See:1,TLC:1,VH1:1,"V sport golf":1,"Viasat Explore":1,"Viasat History":1,"Viasat Nature":1,DiscoveryScience:1,"ESC/ESC1":"Løsning ikke mulig","Extreme Sport":"Løsning ikke mulig","HRT-TV1":"Løsning ikke mulig",MTVClub:1,MTVLive:1,Polonia:"Løsning ikke mulig","Sport Live":1}];
+    let stream=[streamdict["NorlysVaelg4OTT_binaer"]];
+    //[{TV2PlayBasis:1,TV2PlayFavoritSport:"Løsning ikke mulig","TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:1,NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":1,CMore:"Løsning ikke mulig",SkyShowtime:"Løsning ikke mulig","Discovery+underholdning":1,"Discovery+Sport":"Løsning ikke mulig","Viaplay (Film og Serier)":1,"Viaplay Total":"Løsning ikke mulig"}];
+    let pakke=[pakkedict["NorlysVaelg4OTT_binaer"]]
     kanaler.sort();
     stream.sort();
     let NV4=0;
     let NV4stream=0;
     let streamnum=0;
+    Object.keys(kanaler[0]).forEach(navn=>{
+        if(kanaler[0][navn]!=="Løsning ikke mulig"){
+          kanaler[0][navn]=Number(kanaler[0][navn])
+        }
+      })
+      Object.keys(stream[0]).forEach(stnavn=>{
+        if(stream[0][stnavn]!=="Løsning ikke mulig"){
+          stream[0][stnavn]=Number(stream[0][stnavn])
+        }
+      })
+      Object.keys(pakke[0]).forEach(pnavn=>{
+        if(pakke[0][pnavn]!=="Løsning ikke mulig"){
+            pakke[0][pnavn]=Number(pakke[0][pnavn])
+        }  
+    })
             for (let kanal of kanaler){
                     for (let k of Object.keys(kanal)){
                         if(values.includes(k)){
@@ -749,6 +1266,7 @@ let NV4func=function(){
                         }
                     }
                 }
+        let basepris=pakke[0]["Basispris"]
         if(NV4=="Løsning ikke mulig"){
             return "Løsning ikke mulig pga.:"+"<br>("+ikkem.join(", ")+")";
         }
@@ -760,10 +1278,10 @@ let NV4func=function(){
                 return "Løsning ikke mulig (Mere end 1 streamingtjeneste valgt)"
             }
             if(NV4stream==0){
-                return 249+" kr."+" ("+NV4+" ud af 4 kanaler valgt)";
+                return basepris+" kr."+" ("+NV4+" ud af 4 kanaler valgt)";
             }
             else{
-                return NV4stream+249+" kr. (inkl. tilkøb af "+streamlist.join(", ")+")"+"<br>"+249+" kr. (ekskl. "+streamlist.join(", ")+") ("+NV4+" ud af 4 kanaler valgt)";
+                return NV4stream+basepris+" kr. (inkl. tilkøb af "+streamlist.join(", ")+")"+"<br>"+basepris+" kr. (ekskl. "+streamlist.join(", ")+") ("+NV4+" ud af 4 kanaler valgt)";
                  }
             }
 } 
@@ -771,8 +1289,26 @@ let NV4func=function(){
 let NVOfunc=function(){
     let ikkem=[];
     let streamlist=[];
-    let kanaler=[{TV2:1,TV2Charlie:1,TV2Fri:1,TV2News:1,TV2Sport:1,TV2SportX:1,TV2Echo:1,TV3:1,TV3Max:1,"TV3 +":1,TV3Puls:1,TV3Sport:1,Kanal4:1,Kanal5:1,'6eren':1,Canal9:1,DiscoveryChannel:1,DK4:1,NationalGeographic:1,'3Sat':"Løsning ikke mulig",AlJazeera:1,Animalplanet:1,ARD:0,ARTE:"Løsning ikke mulig",BBCBrit:"Løsning ikke mulig",BBCEarth:"Løsning ikke mulig",BBCWorldNews:1,BlueHustler:"Løsning ikke mulig",Boomerang:1,CartoonNetwork:1,CBSReality:1,CNN:1,DisneyChannel:1,DisneyJunior:1,Euronews:1,Eurosport1:1,Eurosport2:1,"ID-InvestegationDiscovery":1,Mezzo:1,MTV:1,MTV80s:1,MTV90s:1,MTVHits:1,NationalGeographicWild:1,NDR:0,"Nick jr.":1,Nickelodeon:1,NRK1:0,ZDF:0,SVT1:0,Folketinget:0,NRK2:"Løsning ikke mulig","TV4 Sverige":0,SVT2:0,"TV2Norge":0,ProSieben:"Løsning ikke mulig","Rai 1":1,See:1,TLC:1,VH1:1,"V sport golf":1,"Viasat Explore":1,"Viasat History":1,"Viasat Nature":1,DiscoveryScience:1,"ESC/ESC1":"Løsning ikke mulig","Extreme Sport":"Løsning ikke mulig","HRT-TV1":"Løsning ikke mulig",MTVClub:1,MTVLive:1,Polonia:"Løsning ikke mulig","Sport Live":1}];
-    let stream=[{TV2PlayBasis:1,TV2PlayFavoritSport:"Løsning ikke mulig","TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:1,NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":1,CMore:"Løsning ikke mulig",SkyShowtime:"Løsning ikke mulig","Discovery+underholdning":1,"Discovery+Sport":"Løsning ikke mulig","Viaplay (Film og Serier)":1,"Viaplay Total":"Løsning ikke mulig"}];
+    let kanaler=[udbyderdict["NorlysVaelg8OTT_binaer"]];
+    //[{TV2:1,TV2Charlie:1,TV2Fri:1,TV2News:1,TV2Sport:1,TV2SportX:1,TV2Echo:1,TV3:1,TV3Max:1,"TV3 +":1,TV3Puls:1,TV3Sport:1,Kanal4:1,Kanal5:1,'6eren':1,Canal9:1,DiscoveryChannel:1,DK4:1,NationalGeographic:1,'3Sat':"Løsning ikke mulig",AlJazeera:1,Animalplanet:1,ARD:0,ARTE:"Løsning ikke mulig",BBCBrit:"Løsning ikke mulig",BBCEarth:"Løsning ikke mulig",BBCWorldNews:1,BlueHustler:"Løsning ikke mulig",Boomerang:1,CartoonNetwork:1,CBSReality:1,CNN:1,DisneyChannel:1,DisneyJunior:1,Euronews:1,Eurosport1:1,Eurosport2:1,"ID-InvestegationDiscovery":1,Mezzo:1,MTV:1,MTV80s:1,MTV90s:1,MTVHits:1,NationalGeographicWild:1,NDR:0,"Nick jr.":1,Nickelodeon:1,NRK1:0,ZDF:0,SVT1:0,Folketinget:0,NRK2:"Løsning ikke mulig","TV4 Sverige":0,SVT2:0,"TV2Norge":0,ProSieben:"Løsning ikke mulig","Rai 1":1,See:1,TLC:1,VH1:1,"V sport golf":1,"Viasat Explore":1,"Viasat History":1,"Viasat Nature":1,DiscoveryScience:1,"ESC/ESC1":"Løsning ikke mulig","Extreme Sport":"Løsning ikke mulig","HRT-TV1":"Løsning ikke mulig",MTVClub:1,MTVLive:1,Polonia:"Løsning ikke mulig","Sport Live":1}];
+    let stream=[streamdict["NorlysVaelg8OTT_binaer"]];
+    //[{TV2PlayBasis:1,TV2PlayFavoritSport:"Løsning ikke mulig","TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:1,NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":1,CMore:"Løsning ikke mulig",SkyShowtime:"Løsning ikke mulig","Discovery+underholdning":1,"Discovery+Sport":"Løsning ikke mulig","Viaplay (Film og Serier)":1,"Viaplay Total":"Løsning ikke mulig"}];
+    let pakke=[pakkedict["NorlysVaelg8OTT_binaer"]]
+    Object.keys(kanaler[0]).forEach(navn=>{
+        if(kanaler[0][navn]!=="Løsning ikke mulig"){
+          kanaler[0][navn]=Number(kanaler[0][navn])
+        }
+      })
+      Object.keys(stream[0]).forEach(stnavn=>{
+        if(stream[0][stnavn]!=="Løsning ikke mulig"){
+          stream[0][stnavn]=Number(stream[0][stnavn])
+        }
+      })
+      Object.keys(pakke[0]).forEach(pnavn=>{
+        if(pakke[0][pnavn]!=="Løsning ikke mulig"){
+            pakke[0][pnavn]=Number(pakke[0][pnavn])
+        }  
+    })
     kanaler.sort();
     stream.sort();
     let NVO=0;
@@ -816,6 +1352,7 @@ let NVOfunc=function(){
                         }
                     }
                 }
+        let basepris=pakke[0]["Basispris"]
         if(NVO=="Løsning ikke mulig"){
             return "Løsning ikke mulig pga.:"+"<br>("+ikkem.join(", ")+")";
         }
@@ -827,10 +1364,10 @@ let NVOfunc=function(){
                 return "Løsning ikke mulig (Mere end 3 streamingtjeneste valgt)"
             }
             if(NVOstream==0){
-                return 399+" kr."+" ("+NVO+" ud af 8 kanaler valgt)";
+                return basepris+" kr."+" ("+NVO+" ud af 8 kanaler valgt)";
             }
             else{
-                return NVOstream+399+" kr. (inkl. tilkøb af "+streamlist.join(", ")+")"+"<br>"+399+" kr. (ekskl. "+streamlist.join(", ")+") ("+NVO+" ud af 8 kanaler valgt)";
+                return NVOstream+basepris+" kr. (inkl. tilkøb af "+streamlist.join(", ")+")"+"<br>"+basepris+" kr. (ekskl. "+streamlist.join(", ")+") ("+NVO+" ud af 8 kanaler valgt)";
                  }
             }
 } 
@@ -839,13 +1376,31 @@ let NVOfunc=function(){
 let NVTfunc=function(){
     let ikkem=[];
     let streamlist=[];
-    let kanaler=[{TV2:1,TV2Charlie:1,TV2Fri:1,TV2News:1,TV2Sport:1,TV2SportX:1,TV2Echo:1,TV3:1,TV3Max:1,"TV3 +":1,TV3Puls:1,TV3Sport:1,Kanal4:1,Kanal5:1,'6eren':1,Canal9:1,DiscoveryChannel:1,DK4:1,NationalGeographic:1,'3Sat':"Løsning ikke mulig",AlJazeera:1,Animalplanet:1,ARD:0,ARTE:"Løsning ikke mulig",BBCBrit:"Løsning ikke mulig",BBCEarth:"Løsning ikke mulig",BBCWorldNews:1,BlueHustler:"Løsning ikke mulig",Boomerang:1,CartoonNetwork:1,CBSReality:1,CNN:1,DisneyChannel:1,DisneyJunior:1,Euronews:1,Eurosport1:1,Eurosport2:1,"ID-InvestegationDiscovery":1,Mezzo:1,MTV:1,MTV80s:1,MTV90s:1,MTVHits:1,NationalGeographicWild:1,NDR:0,"Nick jr.":1,Nickelodeon:1,NRK1:0,ZDF:0,SVT1:0,Folketinget:0,NRK2:"Løsning ikke mulig","TV4 Sverige":0,SVT2:0,"TV2Norge":0,ProSieben:"Løsning ikke mulig","Rai 1":1,See:1,TLC:1,VH1:1,"V sport golf":1,"Viasat Explore":1,"Viasat History":1,"Viasat Nature":1,DiscoveryScience:1,"ESC/ESC1":"Løsning ikke mulig","Extreme Sport":"Løsning ikke mulig","HRT-TV1":"Løsning ikke mulig",MTVClub:1,MTVLive:1,Polonia:"Løsning ikke mulig","Sport Live":1}];
-    let stream=[{TV2PlayBasis:1,TV2PlayFavoritSport:"Løsning ikke mulig","TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:1,NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":1,CMore:"Løsning ikke mulig",SkyShowtime:"Løsning ikke mulig","Discovery+underholdning":1,"Discovery+Sport":"Løsning ikke mulig","Viaplay (Film og Serier)":1,"Viaplay Total":"Løsning ikke mulig"}];
+    let kanaler=[udbyderdict["NorlysVaelg20OTT_binaer"]];
+    //[{TV2:1,TV2Charlie:1,TV2Fri:1,TV2News:1,TV2Sport:1,TV2SportX:1,TV2Echo:1,TV3:1,TV3Max:1,"TV3 +":1,TV3Puls:1,TV3Sport:1,Kanal4:1,Kanal5:1,'6eren':1,Canal9:1,DiscoveryChannel:1,DK4:1,NationalGeographic:1,'3Sat':"Løsning ikke mulig",AlJazeera:1,Animalplanet:1,ARD:0,ARTE:"Løsning ikke mulig",BBCBrit:"Løsning ikke mulig",BBCEarth:"Løsning ikke mulig",BBCWorldNews:1,BlueHustler:"Løsning ikke mulig",Boomerang:1,CartoonNetwork:1,CBSReality:1,CNN:1,DisneyChannel:1,DisneyJunior:1,Euronews:1,Eurosport1:1,Eurosport2:1,"ID-InvestegationDiscovery":1,Mezzo:1,MTV:1,MTV80s:1,MTV90s:1,MTVHits:1,NationalGeographicWild:1,NDR:0,"Nick jr.":1,Nickelodeon:1,NRK1:0,ZDF:0,SVT1:0,Folketinget:0,NRK2:"Løsning ikke mulig","TV4 Sverige":0,SVT2:0,"TV2Norge":0,ProSieben:"Løsning ikke mulig","Rai 1":1,See:1,TLC:1,VH1:1,"V sport golf":1,"Viasat Explore":1,"Viasat History":1,"Viasat Nature":1,DiscoveryScience:1,"ESC/ESC1":"Løsning ikke mulig","Extreme Sport":"Løsning ikke mulig","HRT-TV1":"Løsning ikke mulig",MTVClub:1,MTVLive:1,Polonia:"Løsning ikke mulig","Sport Live":1}];
+    let stream=[streamdict["NorlysVaelg20OTT_binaer"]];
+    //[{TV2PlayBasis:1,TV2PlayFavoritSport:"Løsning ikke mulig","TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:1,NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":1,CMore:"Løsning ikke mulig",SkyShowtime:"Løsning ikke mulig","Discovery+underholdning":1,"Discovery+Sport":"Løsning ikke mulig","Viaplay (Film og Serier)":1,"Viaplay Total":"Løsning ikke mulig"}];
+    let pakke=[pakkedict["NorlysVaelg20OTT_binaer"]]
     kanaler.sort();
     stream.sort();
     let NVT=0;
     let NVTstream=0;
     let streamnum=0;
+    Object.keys(kanaler[0]).forEach(navn=>{
+        if(kanaler[0][navn]!=="Løsning ikke mulig"){
+          kanaler[0][navn]=Number(kanaler[0][navn])
+        }
+      })
+      Object.keys(stream[0]).forEach(stnavn=>{
+        if(stream[0][stnavn]!=="Løsning ikke mulig"){
+          stream[0][stnavn]=Number(stream[0][stnavn])
+        }
+      })
+      Object.keys(pakke[0]).forEach(pnavn=>{
+        if(pakke[0][pnavn]!=="Løsning ikke mulig"){
+            pakke[0][pnavn]=Number(pakke[0][pnavn])
+        }  
+    })
             for (let kanal of kanaler){
                     for (let k of Object.keys(kanal)){
                         if(values.includes(k)){
@@ -884,6 +1439,7 @@ let NVTfunc=function(){
                         }
                     }
                 }
+        basepris=pakke[0]["Basispris"];
         if(NVT=="Løsning ikke mulig"){
             return "Løsning ikke mulig pga.:"+"<br>("+ikkem.join(", ")+")";
         }
@@ -895,10 +1451,10 @@ let NVTfunc=function(){
                 return "Løsning ikke mulig (Mere end 5 streamingtjeneste valgt)"
             }
             if(NVTstream==0){
-                return 649+" kr."+" ("+NVT+" ud af 20 kanaler valgt)";
+                return basepris+" kr."+" ("+NVT+" ud af 20 kanaler valgt)";
             }
             else{
-                return NVTstream+649+" kr. (inkl. tilkøb af "+streamlist.join(", ")+")"+"<br>"+649+" kr. (ekskl. "+streamlist.join(", ")+") ("+NVT+" ud af 20 kanaler valgt)";
+                return NVTstream+basepris+" kr. (inkl. tilkøb af "+streamlist.join(", ")+")"+"<br>"+basepris+" kr. (ekskl. "+streamlist.join(", ")+") ("+NVT+" ud af 20 kanaler valgt)";
                  }
             }
 } 
@@ -907,13 +1463,31 @@ let NVTfunc=function(){
 let NPLfunc=function(){
     let ikkem=[];
     let streamlist=[];
-    let kanaler=[{TV2:0,TV2Charlie:0,TV2Fri:1,TV2News:1,TV2Sport:2,TV2SportX:2,TV2Echo:1,TV3:0,TV3Max:2,"TV3 +":1,TV3Puls:0,TV3Sport:2,Kanal4:0,Kanal5:0,'6eren':1,Canal9:2,DiscoveryChannel:1,DK4:0,NationalGeographic:1,'3Sat':"Løsning ikke mulig",AlJazeera:"Løsning ikke mulig",Animalplanet:2,ARD:0,ARTE:"Løsning ikke mulig",BBCBrit:"Løsning ikke mulig",BBCEarth:"Løsning ikke mulig",BBCWorldNews:"Løsning ikke mulig",BlueHustler:"Løsning ikke mulig",Boomerang:2,CartoonNetwork:1,CBSReality:"Løsning ikke mulig",CNN:2,DisneyChannel:1,DisneyJunior:2,Euronews:"Løsning ikke mulig",Eurosport1:2,Eurosport2:2,"ID-InvestegationDiscovery":2,Mezzo:"Løsning ikke mulig",MTV:2,MTV80s:"Løsning ikke mulig",MTV90s:"Løsning ikke mulig",MTVHits:"Løsning ikke mulig",NationalGeographicWild:2,NDR:0,"Nick jr.":2,Nickelodeon:1,NRK1:0,ZDF:0,SVT1:0,Folketinget:0,NRK2:"Løsning ikke mulig","TV4 Sverige":0,SVT2:0,"TV2Norge":0,ProSieben:"Løsning ikke mulig","Rai 1":"Løsning ikke mulig",See:1,TLC:1,VH1:2,"V sport golf":2,"Viasat Explore":2,"Viasat History":2,"Viasat Nature":2,DiscoveryScience:"Løsning ikke mulig","ESC/ESC1":"Løsning ikke mulig","Extreme Sport":"Løsning ikke mulig","HRT-TV1":"Løsning ikke mulig",MTVClub:"Løsning ikke mulig",MTVLive:"Løsning ikke mulig",Polonia:"Løsning ikke mulig","Sport Live":0}];
-    let stream=[{TV2PlayBasis:2,TV2PlayFavoritSport:2,"TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:"Løsning ikke mulig",NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":2,CMore:"Løsning ikke mulig",SkyShowtime:"Løsning ikke mulig","Discovery+underholdning":2,"Discovery+Sport":"Løsning ikke mulig","Viaplay (Film og Serier)":1,"Viaplay Total":2}];
+    let kanaler=[udbyderdict["NorlysPakkeloesningOTT_pakker"]];
+    //[{TV2:0,TV2Charlie:0,TV2Fri:1,TV2News:1,TV2Sport:2,TV2SportX:2,TV2Echo:1,TV3:0,TV3Max:2,"TV3 +":1,TV3Puls:0,TV3Sport:2,Kanal4:0,Kanal5:0,'6eren':1,Canal9:2,DiscoveryChannel:1,DK4:0,NationalGeographic:1,'3Sat':"Løsning ikke mulig",AlJazeera:"Løsning ikke mulig",Animalplanet:2,ARD:0,ARTE:"Løsning ikke mulig",BBCBrit:"Løsning ikke mulig",BBCEarth:"Løsning ikke mulig",BBCWorldNews:"Løsning ikke mulig",BlueHustler:"Løsning ikke mulig",Boomerang:2,CartoonNetwork:1,CBSReality:"Løsning ikke mulig",CNN:2,DisneyChannel:1,DisneyJunior:2,Euronews:"Løsning ikke mulig",Eurosport1:2,Eurosport2:2,"ID-InvestegationDiscovery":2,Mezzo:"Løsning ikke mulig",MTV:2,MTV80s:"Løsning ikke mulig",MTV90s:"Løsning ikke mulig",MTVHits:"Løsning ikke mulig",NationalGeographicWild:2,NDR:0,"Nick jr.":2,Nickelodeon:1,NRK1:0,ZDF:0,SVT1:0,Folketinget:0,NRK2:"Løsning ikke mulig","TV4 Sverige":0,SVT2:0,"TV2Norge":0,ProSieben:"Løsning ikke mulig","Rai 1":"Løsning ikke mulig",See:1,TLC:1,VH1:2,"V sport golf":2,"Viasat Explore":2,"Viasat History":2,"Viasat Nature":2,DiscoveryScience:"Løsning ikke mulig","ESC/ESC1":"Løsning ikke mulig","Extreme Sport":"Løsning ikke mulig","HRT-TV1":"Løsning ikke mulig",MTVClub:"Løsning ikke mulig",MTVLive:"Løsning ikke mulig",Polonia:"Løsning ikke mulig","Sport Live":0}];
+    let stream=[streamdict["NorlysPakkeloesningOTT_pakker"]];
+    //[{TV2PlayBasis:2,TV2PlayFavoritSport:2,"TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:"Løsning ikke mulig",NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":2,CMore:"Løsning ikke mulig",SkyShowtime:"Løsning ikke mulig","Discovery+underholdning":2,"Discovery+Sport":"Løsning ikke mulig","Viaplay (Film og Serier)":1,"Viaplay Total":2}];
+    let pakke=[pakkedict["NorlysPakkeloesningOTT_pakker"]]
     kanaler.sort();
     stream.sort();
     let NPL=0;
     let NPLstream=0;
-            for (let kanal of kanaler){
+    Object.keys(kanaler[0]).forEach(navn=>{
+        if(kanaler[0][navn]!=="Løsning ikke mulig"){
+          kanaler[0][navn]=Number(kanaler[0][navn])
+        }
+      })
+      Object.keys(stream[0]).forEach(stnavn=>{
+        if(stream[0][stnavn]!=="Løsning ikke mulig"){
+          stream[0][stnavn]=Number(stream[0][stnavn])
+        }
+      })
+      Object.keys(pakke[0]).forEach(pnavn=>{
+        if(pakke[0][pnavn]!=="Løsning ikke mulig"){
+            pakke[0][pnavn]=Number(pakke[0][pnavn])
+        }  
+    })
+                for (let kanal of kanaler){
                     for (let k of Object.keys(kanal)){
                         if(values.includes(k)){
                             if(kanal[k]=="Løsning ikke mulig"||NPL=="Løsning ikke mulig"){
@@ -946,18 +1520,18 @@ let NPLfunc=function(){
                         }
                     }
                 }
-
-        pakkepris=[274,529,779]
-        pakke=[" (lille pakke)"," (mellem pakke)", " (stor pakke)"]
+        let NPLp=pakke[0]
+        let pakkepris=[NPLp["Lille pakke"],NPLp["Mellem pakke"],NPLp["Stor pakke"]]
+        let pakken=[" (lille pakke)"," (mellem pakke)", " (stor pakke)"]
         if(NPL=="Løsning ikke mulig"){
             return "Løsning ikke mulig pga.:<br>("+ikkem.join(", ")+")";
         }
         else{
             if(NPLstream==0){
-                return pakkepris[NPL]+" kr." +pakke[NPL];
+                return pakkepris[NPL]+" kr." +pakken[NPL];
             }
             else{
-                return NPLstream+pakkepris[NPL]+" kr. (inkl. tilkøb af "+streamlist.join(", ")+")"+"<br>"+pakkepris[NPL]+" kr. (ekskl. "+streamlist.join(", ")+")";
+                return NPLstream+pakkepris[NPL]+" kr."+pakken[NPL]+" (inkl. tilkøb af "+streamlist.join(", ")+")"+"<br>"+pakkepris[NPL]+" kr. (ekskl. "+streamlist.join(", ")+")";
             }
     }
 }
@@ -966,12 +1540,30 @@ let NPLfunc=function(){
 let SPLfunc=function(){
     let ikkem=[];
     let streamlist=[];
-    let kanaler=[{TV2:0,TV2Charlie:0,TV2Fri:1,TV2News:1,TV2Sport:2,TV2SportX:2,TV2Echo:1,TV3:0,TV3Max:2,"TV3 +":1,TV3Puls:0,TV3Sport:2,Kanal4:0,Kanal5:0,'6eren':1,Canal9:2,DiscoveryChannel:1,DK4:0,NationalGeographic:1,'3Sat':"Løsning ikke mulig",AlJazeera:"Løsning ikke mulig",Animalplanet:2,ARD:"Løsning ikke mulig",ARTE:"Løsning ikke mulig",BBCBrit:"Løsning ikke mulig",BBCEarth:"Løsning ikke mulig",BBCWorldNews:"Løsning ikke mulig",BlueHustler:"Løsning ikke mulig",Boomerang:2,CartoonNetwork:1,CBSReality:"Løsning ikke mulig",CNN:2,DisneyChannel:1,DisneyJunior:2,Euronews:"Løsning ikke mulig",Eurosport1:2,Eurosport2:2,"ID-InvestegationDiscovery":2,Mezzo:"Løsning ikke mulig",MTV:2,MTV80s:"Løsning ikke mulig",MTV90s:"Løsning ikke mulig",MTVHits:"Løsning ikke mulig",NationalGeographicWild:2,NDR:0,"Nick jr.":2,Nickelodeon:1,NRK1:0,ZDF:0,SVT1:0,Folketinget:0,NRK2:0,"TV4 Sverige":0,SVT2:0,"TV2Norge":0,ProSieben:"Løsning ikke mulig","Rai 1":"Løsning ikke mulig",See:1,TLC:1,VH1:2,"V sport golf":2,"Viasat Explore":2,"Viasat History":2,"Viasat Nature":2,DiscoveryScience:"Løsning ikke mulig","ESC/ESC1":"Løsning ikke mulig","Extreme Sport":"Løsning ikke mulig","HRT-TV1":"Løsning ikke mulig",MTVClub:"Løsning ikke mulig",MTVLive:"Løsning ikke mulig",Polonia:"Løsning ikke mulig","Sport Live":0}];
-    let stream=[{TV2PlayBasis:2,TV2PlayFavoritSport:2,"TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:"Løsning ikke mulig",NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":2,CMore:"Løsning ikke mulig",SkyShowtime:"Løsning ikke mulig","Discovery+underholdning":2,"Discovery+Sport":"Løsning ikke mulig","Viaplay (Film og Serier)":1,"Viaplay Total":2}];
+    let kanaler=[udbyderdict["StofaPakkeloesning_pakker"]];
+    //[{TV2:0,TV2Charlie:0,TV2Fri:1,TV2News:1,TV2Sport:2,TV2SportX:2,TV2Echo:1,TV3:0,TV3Max:2,"TV3 +":1,TV3Puls:0,TV3Sport:2,Kanal4:0,Kanal5:0,'6eren':1,Canal9:2,DiscoveryChannel:1,DK4:0,NationalGeographic:1,'3Sat':"Løsning ikke mulig",AlJazeera:"Løsning ikke mulig",Animalplanet:2,ARD:"Løsning ikke mulig",ARTE:"Løsning ikke mulig",BBCBrit:"Løsning ikke mulig",BBCEarth:"Løsning ikke mulig",BBCWorldNews:"Løsning ikke mulig",BlueHustler:"Løsning ikke mulig",Boomerang:2,CartoonNetwork:1,CBSReality:"Løsning ikke mulig",CNN:2,DisneyChannel:1,DisneyJunior:2,Euronews:"Løsning ikke mulig",Eurosport1:2,Eurosport2:2,"ID-InvestegationDiscovery":2,Mezzo:"Løsning ikke mulig",MTV:2,MTV80s:"Løsning ikke mulig",MTV90s:"Løsning ikke mulig",MTVHits:"Løsning ikke mulig",NationalGeographicWild:2,NDR:0,"Nick jr.":2,Nickelodeon:1,NRK1:0,ZDF:0,SVT1:0,Folketinget:0,NRK2:0,"TV4 Sverige":0,SVT2:0,"TV2Norge":0,ProSieben:"Løsning ikke mulig","Rai 1":"Løsning ikke mulig",See:1,TLC:1,VH1:2,"V sport golf":2,"Viasat Explore":2,"Viasat History":2,"Viasat Nature":2,DiscoveryScience:"Løsning ikke mulig","ESC/ESC1":"Løsning ikke mulig","Extreme Sport":"Løsning ikke mulig","HRT-TV1":"Løsning ikke mulig",MTVClub:"Løsning ikke mulig",MTVLive:"Løsning ikke mulig",Polonia:"Løsning ikke mulig","Sport Live":0}];
+    let stream=[streamdict["StofaPakkeloesning_pakker"]];
+    //[{TV2PlayBasis:2,TV2PlayFavoritSport:2,"TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:"Løsning ikke mulig",NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":2,CMore:"Løsning ikke mulig",SkyShowtime:"Løsning ikke mulig","Discovery+underholdning":2,"Discovery+Sport":"Løsning ikke mulig","Viaplay (Film og Serier)":1,"Viaplay Total":2}];
+    let pakke=[pakkedict["StofaPakkeloesning_pakker"]]
     kanaler.sort();
     stream.sort();
     let SPL=0;
     let SPLstream=0;
+    Object.keys(kanaler[0]).forEach(navn=>{
+        if(kanaler[0][navn]!=="Løsning ikke mulig"){
+          kanaler[0][navn]=Number(kanaler[0][navn])
+        }
+      })
+      Object.keys(stream[0]).forEach(stnavn=>{
+        if(stream[0][stnavn]!=="Løsning ikke mulig"){
+          stream[0][stnavn]=Number(stream[0][stnavn])
+        }
+      })
+      Object.keys(pakke[0]).forEach(pnavn=>{
+        if(pakke[0][pnavn]!=="Løsning ikke mulig"){
+            pakke[0][pnavn]=Number(pakke[0][pnavn])
+        }  
+    })
             for (let kanal of kanaler){
                     for (let k of Object.keys(kanal)){
                         if(values.includes(k)){
@@ -1005,18 +1597,18 @@ let SPLfunc=function(){
                         }
                     }
                 }
-
-        pakkepris=[274,529,779]
-        pakke=[" (lille pakke)"," (mellem pakke)", " (stor pakke)"]
+        let SPLp=pakke[0]
+        let pakkepris=[SPLp["Lille pakke"],SPLp["Mellem pakke"],SPLp["Stor pakke"]]
+        let pakken=[" (lille pakke)"," (mellem pakke)", " (stor pakke)"]
         if(SPL=="Løsning ikke mulig"){
             return "Løsning ikke mulig pga.:<br>("+ikkem.join(", ")+")";
         }
         else{
             if(SPLstream==0){
-                return pakkepris[SPL]+" kr." +pakke[SPL];
+                return pakkepris[SPL]+" kr." +pakken[SPL];
             }
             else{
-                return SPLstream+pakkepris[SPL]+" kr. (inkl. tilkøb af "+streamlist.join(", ")+")"+"<br>"+pakkepris[SPL]+" kr. (ekskl. "+streamlist.join(", ")+")";
+                return SPLstream+pakkepris[SPL]+" kr."+pakken[SPL]+" (inkl. tilkøb af "+streamlist.join(", ")+")"+"<br>"+pakkepris[SPL]+" kr. (ekskl. "+streamlist.join(", ")+")";
             }
     }
 }
@@ -1025,12 +1617,30 @@ let SPLfunc=function(){
 let SVSfunc=function(){
     let ikkem=[];
     let streamlist=[];
-    let kanaler=[{TV2:0,TV2Charlie:0,TV2Fri:1,TV2News:1,TV2Sport:2,TV2SportX:2,TV2Echo:1,TV3:0,TV3Max:2,"TV3 +":3,TV3Puls:0,TV3Sport:3,Kanal4:0,Kanal5:0,'6eren':1,Canal9:1,DiscoveryChannel:1,DK4:0,NationalGeographic:1,'3Sat':1,AlJazeera:1,Animalplanet:1,ARD:"Løsning ikke mulig",ARTE:1,BBCBrit:1,BBCEarth:1,BBCWorldNews:1,BlueHustler:1,Boomerang:1,CartoonNetwork:1,CBSReality:1,CNN:1,DisneyChannel:1,DisneyJunior:1,Euronews:1,Eurosport1:1,Eurosport2:2,"ID-InvestegationDiscovery":1,Mezzo:1,MTV:1,MTV80s:1,MTV90s:1,MTVHits:1,NationalGeographicWild:1,NDR:0,"Nick jr.":1,Nickelodeon:1,NRK1:0,ZDF:0,SVT1:0,Folketinget:0,NRK2:0,"TV4 Sverige":0,SVT2:0,"TV2Norge":0,ProSieben:1,"Rai 1":1,See:2,TLC:1,VH1:1,"V sport golf":1,"Viasat Explore":1,"Viasat History":1,"Viasat Nature":1,DiscoveryScience:1,"ESC/ESC1":1,"Extreme Sport":1,"HRT-TV1":1,MTVClub:1,MTVLive:1,Polonia:1,"Sport Live":0}];
-    let stream=[{TV2PlayBasis:2,TV2PlayFavoritSport:8,"TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:4,NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":3,CMore:5,SkyShowtime:"Løsning ikke mulig","Discovery+underholdning":2,"Discovery+Sport":8,"Viaplay (Film og Serier)":6,"Viaplay Total":"Løsning ikke mulig"}];
+    let kanaler=[udbyderdict["StofaVaelgSelv_point"]];
+    //[{TV2:0,TV2Charlie:0,TV2Fri:1,TV2News:1,TV2Sport:2,TV2SportX:2,TV2Echo:1,TV3:0,TV3Max:2,"TV3 +":3,TV3Puls:0,TV3Sport:3,Kanal4:0,Kanal5:0,'6eren':1,Canal9:1,DiscoveryChannel:1,DK4:0,NationalGeographic:1,'3Sat':1,AlJazeera:1,Animalplanet:1,ARD:"Løsning ikke mulig",ARTE:1,BBCBrit:1,BBCEarth:1,BBCWorldNews:1,BlueHustler:1,Boomerang:1,CartoonNetwork:1,CBSReality:1,CNN:1,DisneyChannel:1,DisneyJunior:1,Euronews:1,Eurosport1:1,Eurosport2:2,"ID-InvestegationDiscovery":1,Mezzo:1,MTV:1,MTV80s:1,MTV90s:1,MTVHits:1,NationalGeographicWild:1,NDR:0,"Nick jr.":1,Nickelodeon:1,NRK1:0,ZDF:0,SVT1:0,Folketinget:0,NRK2:0,"TV4 Sverige":0,SVT2:0,"TV2Norge":0,ProSieben:1,"Rai 1":1,See:2,TLC:1,VH1:1,"V sport golf":1,"Viasat Explore":1,"Viasat History":1,"Viasat Nature":1,DiscoveryScience:1,"ESC/ESC1":1,"Extreme Sport":1,"HRT-TV1":1,MTVClub:1,MTVLive:1,Polonia:1,"Sport Live":0}];
+    let stream=[streamdict["StofaVaelgSelv_point"]];
+    //[{TV2PlayBasis:2,TV2PlayFavoritSport:8,"TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:4,NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":3,CMore:5,SkyShowtime:"Løsning ikke mulig","Discovery+underholdning":2,"Discovery+Sport":8,"Viaplay (Film og Serier)":6,"Viaplay Total":"Løsning ikke mulig"}];
+    let pakke=[pakkedict["StofaVaelgSelv_point"]]
     kanaler.sort();
     stream.sort();
     let SVS=0;
     let SVSstream=0;
+    Object.keys(kanaler[0]).forEach(navn=>{
+        if(kanaler[0][navn]!=="Løsning ikke mulig"){
+          kanaler[0][navn]=Number(kanaler[0][navn])
+        }
+      })
+      Object.keys(stream[0]).forEach(stnavn=>{
+        if(stream[0][stnavn]!=="Løsning ikke mulig"){
+          stream[0][stnavn]=Number(stream[0][stnavn])
+        }
+      })
+      Object.keys(pakke[0]).forEach(pnavn=>{
+        if(pakke[0][pnavn]!=="Løsning ikke mulig"){
+            pakke[0][pnavn]=Number(pakke[0][pnavn])
+        }  
+    })
     for (let kanal of kanaler){
         for (let k of Object.keys(kanal)){
             if(values.includes(k)){
@@ -1068,7 +1678,8 @@ let SVSfunc=function(){
     if(isNaN(SVS)){
         return "Løsning ikke mulig pga.:<br>("+ikkem.join(", ")+")";
     }
-    priser=[469,559,629];
+    let SVSp=pakke[0]
+    let priser=[SVSp["10 point"],SVSp["20 point"],SVSp["30 point"]]
     if(SVSstream==0){
         if (SVS<=10){
             return priser[0]+" kr."+" (10 point)"+" ("+SVS+" point brugt)";
@@ -1103,12 +1714,30 @@ let SVSfunc=function(){
 let YouPfunc=function(){
     ikkem=[];
     let streamlist=[];
-    let kanaler=[{TV2:3,TV2Charlie:2,TV2Fri:2,TV2News:2,TV2Sport:3,TV2SportX:3,TV2Echo:2,TV3:3,TV3Max:3,"TV3 +":4,TV3Puls:2,TV3Sport:3,Kanal4:"Løsning ikke mulig",Kanal5:"Løsning ikke mulig",'6eren':"Løsning ikke mulig",Canal9:"Løsning ikke mulig",DiscoveryChannel:"Løsning ikke mulig",DK4:1,NationalGeographic:1,'3Sat':1,AlJazeera:1,Animalplanet:"Løsning ikke mulig",ARD:0,ARTE:1,BBCBrit:"Løsning ikke mulig",BBCEarth:"Løsning ikke mulig",BBCWorldNews:1,BlueHustler:2,Boomerang:1,CartoonNetwork:1,CBSReality:1,CNN:1,DisneyChannel:1,DisneyJunior:1,Euronews:1,Eurosport1:"Løsning ikke mulig",Eurosport2:"Løsning ikke mulig","ID-InvestegationDiscovery":"Løsning ikke mulig",Mezzo:1,MTV:1,MTV80s:1,MTV90s:1,MTVHits:1,NationalGeographicWild:1,NDR:0,"Nick jr.":1,Nickelodeon:1,NRK1:0,ZDF:0,SVT1:0,Folketinget:0,NRK2:"Løsning ikke mulig","TV4 Sverige":0,SVT2:0,"TV2Norge":"Løsning ikke mulig",ProSieben:1,"Rai 1":1,See:3,TLC:"Løsning ikke mulig",VH1:1,"V sport golf":1,"Viasat Explore":1,"Viasat History":1,"Viasat Nature":1,DiscoveryScience:"Løsning ikke mulig","ESC/ESC1":"Løsning ikke mulig","Extreme Sport":"Løsning ikke mulig","HRT-TV1":"Løsning ikke mulig",MTVClub:"Løsning ikke mulig",MTVLive:"Løsning ikke mulig",MTVLive:"Løsning ikke mulig",Polonia:"Løsning ikke mulig","Sport Live":1}];
-    let stream=[{TV2PlayBasis:19,TV2PlayFavoritSport:19,"TV2PlayFavoritSport (Uden reklamer)":19,"Disney+":5,HBOMax:7,NetflixStandard:11,NetflixPremium:15,"NordiskFilm+":4,CMore:9,SkyShowtime:6,"Discovery+underholdning":"Løsning ikke mulig","Discovery+Sport":"Løsning ikke mulig","Viaplay (Film og Serier)":10,"Viaplay Total":"Løsning ikke mulig"}];
+    let kanaler=[udbyderdict["YouseePlay_point"]];
+    //[{TV2:3,TV2Charlie:2,TV2Fri:2,TV2News:2,TV2Sport:3,TV2SportX:3,TV2Echo:2,TV3:3,TV3Max:3,"TV3 +":4,TV3Puls:2,TV3Sport:3,Kanal4:"Løsning ikke mulig",Kanal5:"Løsning ikke mulig",'6eren':"Løsning ikke mulig",Canal9:"Løsning ikke mulig",DiscoveryChannel:"Løsning ikke mulig",DK4:1,NationalGeographic:1,'3Sat':1,AlJazeera:1,Animalplanet:"Løsning ikke mulig",ARD:0,ARTE:1,BBCBrit:"Løsning ikke mulig",BBCEarth:"Løsning ikke mulig",BBCWorldNews:1,BlueHustler:2,Boomerang:1,CartoonNetwork:1,CBSReality:1,CNN:1,DisneyChannel:1,DisneyJunior:1,Euronews:1,Eurosport1:"Løsning ikke mulig",Eurosport2:"Løsning ikke mulig","ID-InvestegationDiscovery":"Løsning ikke mulig",Mezzo:1,MTV:1,MTV80s:1,MTV90s:1,MTVHits:1,NationalGeographicWild:1,NDR:0,"Nick jr.":1,Nickelodeon:1,NRK1:0,ZDF:0,SVT1:0,Folketinget:0,NRK2:"Løsning ikke mulig","TV4 Sverige":0,SVT2:0,"TV2Norge":"Løsning ikke mulig",ProSieben:1,"Rai 1":1,See:3,TLC:"Løsning ikke mulig",VH1:1,"V sport golf":1,"Viasat Explore":1,"Viasat History":1,"Viasat Nature":1,DiscoveryScience:"Løsning ikke mulig","ESC/ESC1":"Løsning ikke mulig","Extreme Sport":"Løsning ikke mulig","HRT-TV1":"Løsning ikke mulig",MTVClub:"Løsning ikke mulig",MTVLive:"Løsning ikke mulig",MTVLive:"Løsning ikke mulig",Polonia:"Løsning ikke mulig","Sport Live":1}];
+    let stream=[streamdict["YouseePlay_point"]];
+    //[{TV2PlayBasis:19,TV2PlayFavoritSport:19,"TV2PlayFavoritSport (Uden reklamer)":19,"Disney+":5,HBOMax:7,NetflixStandard:11,NetflixPremium:15,"NordiskFilm+":4,CMore:9,SkyShowtime:6,"Discovery+underholdning":"Løsning ikke mulig","Discovery+Sport":"Løsning ikke mulig","Viaplay (Film og Serier)":10,"Viaplay Total":"Løsning ikke mulig"}];
+    let pakke=[pakkedict["YouseePlay_point"]]
     kanaler.sort();
     stream.sort();
     let YouP=0;
     let YouPstream=0;
+    Object.keys(kanaler[0]).forEach(navn=>{
+        if(kanaler[0][navn]!=="Løsning ikke mulig"){
+          kanaler[0][navn]=Number(kanaler[0][navn])
+        }
+      })
+      Object.keys(stream[0]).forEach(stnavn=>{
+        if(stream[0][stnavn]!=="Løsning ikke mulig"){
+          stream[0][stnavn]=Number(stream[0][stnavn])
+        }
+      })
+      Object.keys(pakke[0]).forEach(pnavn=>{
+        if(pakke[0][pnavn]!=="Løsning ikke mulig"){
+            pakke[0][pnavn]=Number(pakke[0][pnavn])
+        }  
+    })
         for (let kanal of kanaler){
             for (let k of Object.keys(kanal)){
                 if(values.includes(k)){
@@ -1147,7 +1776,8 @@ let YouPfunc=function(){
     if(isNaN(YouP)){
         return "Løsning ikke mulig pga.:<br>("+ikkem.join(", ")+")";
     }
-    priser=[299,399,499,599];
+    let YouPp=pakke[0]
+    let priser=[YouPp["10 point"],YouPp["20 point"],YouPp["30 point"],YouPp["40 point"]]
     if(YouPstream==0){
         if (YouP<=10){
             return priser[0]+" kr."+" (10 point)"+" ("+YouP+" point brugt)";
@@ -1162,7 +1792,7 @@ let YouPfunc=function(){
             return priser[3]+" kr."+" (40 point)"+" ("+YouP+" point brugt)";
         }
         else{
-            let p=(YouP-40)*10;
+            let p=(YouP-40)*YouPp["40+ point (per point)"];
             return priser[3]+p+" kr."+ " (40+ point)"+" ("+YouP+" point brugt)"
         }
     }
@@ -1180,7 +1810,7 @@ let YouPfunc=function(){
             return priser[3]+YouPstream+" kr."+" (40 point)"+" ("+YouP+" point brugt)"+" (inkl. tilkøb af "+streamlist.join(", ")+")"+"<br>"+priser[3]+" kr. (ekskl. "+streamlist.join(", ")+")";
         }
         else{
-            let p=(YouP-40)*10;
+            let p=(YouP-40)*YouPp["40+ point (per point)"];
             let basepris=priser[3]+p;
             return basepris+YouPstream+" kr."+ " (40+ point)"+" ("+YouP+" point brugt)" +" (inkl. tilkøb af "+streamlist.join(", ")+")"+"<br>"+basepris+" kr. (ekskl. "+streamlist.join(", ")+")";
         }
@@ -1192,16 +1822,40 @@ let YouPfunc=function(){
 let AllStreamFunc=function(){
     let ikkem=[];
     let streamlist=[];
-    let kanaler=[{TV2:0,TV2Charlie:0,TV2Fri:0,TV2News:0,TV2Sport:2,TV2SportX:2,TV2Echo:0,TV3:0,TV3Max:2,"TV3 +":0,TV3Puls:0,TV3Sport:2,Kanal4:0,Kanal5:0,'6eren':0,Canal9:2,DiscoveryChannel:1,DK4:0,NationalGeographic:1,'3Sat':"Løsning ikke mulig",AlJazeera:"Løsning ikke mulig",Animalplanet:1,ARD:"Løsning ikke mulig",ARTE:"Løsning ikke mulig",BBCBrit:1,BBCEarth:1,BBCWorldNews:1,BlueHustler:"Løsning ikke mulig",Boomerang:"Løsning ikke mulig",CartoonNetwork:"Løsning ikke mulig",CBSReality:"Løsning ikke mulig",CNN:"Løsning ikke mulig",DisneyChannel:1,DisneyJunior:1,Euronews:"Løsning ikke mulig",Eurosport1:2,Eurosport2:2,"ID-InvestegationDiscovery":1,Mezzo:"Løsning ikke mulig",MTV:"Løsning ikke mulig",MTV80s:"Løsning ikke mulig",MTV90s:"Løsning ikke mulig",MTVHits:"Løsning ikke mulig",NationalGeographicWild:1,NDR:"Løsning ikke mulig","Nick jr.":1,Nickelodeon:1,NRK1:"Løsning ikke mulig",ZDF:"Løsning ikke mulig",SVT1:"Løsning ikke mulig",Folketinget:"Løsning ikke mulig",NRK2:"Løsning ikke mulig","TV4 Sverige":"Løsning ikke mulig",SVT2:"Løsning ikke mulig","TV2Norge":"Løsning ikke mulig",ProSieben:"Løsning ikke mulig","Rai 1":"Løsning ikke mulig",See:1,TLC:1,VH1:"Løsning ikke mulig","V sport golf":"Løsning ikke mulig","Viasat Explore":1,"Viasat History":1,"Viasat Nature":1,DiscoveryScience:1,"ESC/ESC1":"Løsning ikke mulig","Extreme Sport":"Løsning ikke mulig","HRT-TV1":"Løsning ikke mulig",MTVClub:"Løsning ikke mulig",MTVLive:"Løsning ikke mulig",Polonia:"Løsning ikke mulig","Sport Live":2}];
-    let stream=[{TV2PlayBasis:"Løsning ikke mulig",TV2PlayFavoritSport:"Løsning ikke mulig","TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:"Løsning ikke mulig",NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":"Løsning ikke mulig",CMore:"Løsning ikke mulig",SkyShowtime:"Løsning ikke mulig","Discovery+underholdning":"Løsning ikke mulig","Discovery+Sport":"Løsning ikke mulig","Viaplay (Film og Serier)":0,"Viaplay Total":2}];
-    let streamtilvalgnavn=["Viaplay (Film og Serier)","HBOMax","Discovery+underholdning","Discovery+Sport","CMore","SkyShowtime"];
-    let streamtilvalg=[{"Viaplay (Film og Serier)":79,HBOMax:69,"Discovery+underholdning":79,"Discovery+Sport":129,CMore:99,SkyShowtime:59}];
+    let kanaler=[udbyderdict["AllenteStreamTV_pakker"]];//[{TV2:0,TV2Charlie:0,TV2Fri:0,TV2News:0,TV2Sport:2,TV2SportX:2,TV2Echo:0,TV3:0,TV3Max:2,"TV3 +":0,TV3Puls:0,TV3Sport:2,Kanal4:0,Kanal5:0,'6eren':0,Canal9:2,DiscoveryChannel:1,DK4:0,NationalGeographic:1,'3Sat':"Løsning ikke mulig",AlJazeera:"Løsning ikke mulig",Animalplanet:1,ARD:"Løsning ikke mulig",ARTE:"Løsning ikke mulig",BBCBrit:1,BBCEarth:1,BBCWorldNews:1,BlueHustler:"Løsning ikke mulig",Boomerang:"Løsning ikke mulig",CartoonNetwork:"Løsning ikke mulig",CBSReality:"Løsning ikke mulig",CNN:"Løsning ikke mulig",DisneyChannel:1,DisneyJunior:1,Euronews:"Løsning ikke mulig",Eurosport1:2,Eurosport2:2,"ID-InvestegationDiscovery":1,Mezzo:"Løsning ikke mulig",MTV:"Løsning ikke mulig",MTV80s:"Løsning ikke mulig",MTV90s:"Løsning ikke mulig",MTVHits:"Løsning ikke mulig",NationalGeographicWild:1,NDR:"Løsning ikke mulig","Nick jr.":1,Nickelodeon:1,NRK1:"Løsning ikke mulig",ZDF:"Løsning ikke mulig",SVT1:"Løsning ikke mulig",Folketinget:"Løsning ikke mulig",NRK2:"Løsning ikke mulig","TV4 Sverige":"Løsning ikke mulig",SVT2:"Løsning ikke mulig","TV2Norge":"Løsning ikke mulig",ProSieben:"Løsning ikke mulig","Rai 1":"Løsning ikke mulig",See:1,TLC:1,VH1:"Løsning ikke mulig","V sport golf":"Løsning ikke mulig","Viasat Explore":1,"Viasat History":1,"Viasat Nature":1,DiscoveryScience:1,"ESC/ESC1":"Løsning ikke mulig","Extreme Sport":"Løsning ikke mulig","HRT-TV1":"Løsning ikke mulig",MTVClub:"Løsning ikke mulig",MTVLive:"Løsning ikke mulig",Polonia:"Løsning ikke mulig","Sport Live":2}];
+    let stream=[streamdict["AllenteStreamTV_pakker"]];//[{TV2PlayBasis:"Løsning ikke mulig",TV2PlayFavoritSport:"Løsning ikke mulig","TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:"Løsning ikke mulig",NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":"Løsning ikke mulig",CMore:"Løsning ikke mulig",SkyShowtime:"Løsning ikke mulig","Discovery+underholdning":"Løsning ikke mulig","Discovery+Sport":"Løsning ikke mulig","Viaplay (Film og Serier)":0,"Viaplay Total":2}];
+    let streamtilvalg=[streamdict["Allente streamingtilvalg (pris)"]];
+    let streamtilvalgnavn=Object.keys(streamtilvalg);
+    //["Viaplay (Film og Serier)","HBOMax","Discovery+underholdning","Discovery+Sport","CMore","SkyShowtime"];
+    //[{"Viaplay (Film og Serier)":79,HBOMax:69,"Discovery+underholdning":79,"Discovery+Sport":129,CMore:99,SkyShowtime:59}];
+    let pakke=[pakkedict["AllenteStreamTV_pakker"]]
     let ekstrastreaming=[]
     kanaler.sort();
     stream.sort();
     let AS=0;
     let ASstream=0;
     let streamekstra=0;
+    Object.keys(kanaler[0]).forEach(navn=>{
+        if(kanaler[0][navn]!=="Løsning ikke mulig"){
+          kanaler[0][navn]=Number(kanaler[0][navn])
+        }
+      })
+      Object.keys(stream[0]).forEach(stnavn=>{
+        if(stream[0][stnavn]!=="Løsning ikke mulig"){
+          stream[0][stnavn]=Number(stream[0][stnavn])
+        }
+      })
+      Object.keys(streamtilvalg[0]).forEach(sttnavn=>{
+        if(streamtilvalg[0][sttnavn]!=="Løsning ikke mulig"){
+          streamtilvalg[0][sttnavn]=Number(streamtilvalg[0][sttnavn])
+        }
+      })
+      Object.keys(pakke[0]).forEach(pnavn=>{
+        if(pakke[0][pnavn]!=="Løsning ikke mulig"){
+            pakke[0][pnavn]=Number(pakke[0][pnavn])
+        }  
+    })
+
             for (let kanal of kanaler){
                     for (let k of Object.keys(kanal)){
                         if(values.includes(k)){
@@ -1247,20 +1901,20 @@ let AllStreamFunc=function(){
         if(!ekstrastreaming.length==0){
             ekstratekst="(inkl. tilvalgspakke: "+ekstrastreaming.join(", ")+")";
         }
-
-        pakkepris=[429,549,659]
-        pakke=[" (Basic pakke)"," (Standard pakke)", " (Premium pakke)"]
+        let ASp=pakke[0]
+        let pakkepris=[ASp["Lille pakke"],ASp["Mellem pakke"],ASp["Stor pakke"]]
+        let pakken=[" (Basic pakke)"," (Standard pakke)", " (Premium pakke)"];
         if(AS=="Løsning ikke mulig"){
             return "Løsning ikke mulig pga.:<br>("+ikkem.join(", ")+")";
         }
         else{
             if(ASstream==0){
                 let prisAll=pakkepris[AS]+streamekstra;
-                return prisAll+" kr." +pakke[AS]+ekstratekst;
+                return prisAll+" kr." +pakken[AS]+ekstratekst;
             }
             else{
                 let prisAll=pakkepris[AS]+streamekstra;
-                return prisAll+ASstream+" kr."+pakke[AS]+" "+ekstratekst+" (inkl. tilkøb af "+streamlist.join(", ")+")"+"<br>"+prisAll+" kr."+" (ekskl. "+streamlist.join(", ")+")"
+                return prisAll+ASstream+" kr."+pakken[AS]+" "+ekstratekst+" (inkl. tilkøb af "+streamlist.join(", ")+")"+"<br>"+prisAll+" kr."+" (ekskl. "+streamlist.join(", ")+")"
             }
     }
 }
@@ -1269,16 +1923,39 @@ let AllStreamFunc=function(){
 let AllParaFunc=function(){
     let ikkem=[];
     let streamlist=[];
-    let kanaler=[{TV2:0,TV2Charlie:0,TV2Fri:0,TV2News:0,TV2Sport:2,TV2SportX:2,TV2Echo:0,TV3:0,TV3Max:2,"TV3 +":0,TV3Puls:0,TV3Sport:2,Kanal4:0,Kanal5:0,'6eren':0,Canal9:2,DiscoveryChannel:1,DK4:0,NationalGeographic:1,'3Sat':"Løsning ikke mulig",AlJazeera:1,Animalplanet:1,ARD:"Løsning ikke mulig",ARTE:"Løsning ikke mulig",BBCBrit:1,BBCEarth:1,BBCWorldNews:1,BlueHustler:"Løsning ikke mulig",Boomerang:1,CartoonNetwork:1,CBSReality:"Løsning ikke mulig",CNN:1,DisneyChannel:1,DisneyJunior:1,Euronews:"Løsning ikke mulig",Eurosport1:2,Eurosport2:2,"ID-InvestegationDiscovery":1,Mezzo:"Løsning ikke mulig",MTV:1,MTV80s:1,MTV90s:"Løsning ikke mulig",MTVHits:"Løsning ikke mulig",NationalGeographicWild:1,NDR:"Løsning ikke mulig","Nick jr.":1,Nickelodeon:1,NRK1:0,ZDF:"Løsning ikke mulig",SVT1:0,Folketinget:"Løsning ikke mulig",NRK2:"Løsning ikke mulig","TV4 Sverige":0,SVT2:0,"TV2Norge":"Løsning ikke mulig",ProSieben:"Løsning ikke mulig","Rai 1":"Løsning ikke mulig",See:1,TLC:1,VH1:1,"V sport golf":"Løsning ikke mulig","Viasat Explore":1,"Viasat History":1,"Viasat Nature":1,DiscoveryScience:1,"ESC/ESC1":"Løsning ikke mulig","Extreme Sport":"Løsning ikke mulig","HRT-TV1":"Løsning ikke mulig",MTVClub:"Løsning ikke mulig",MTVLive:"Løsning ikke mulig",Polonia:"Løsning ikke mulig","Sport Live":2}];
-    let stream=[{TV2PlayBasis:"Løsning ikke mulig",TV2PlayFavoritSport:"Løsning ikke mulig","TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:"Løsning ikke mulig",NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":"Løsning ikke mulig",CMore:"Løsning ikke mulig",SkyShowtime:1,"Discovery+underholdning":"Løsning ikke mulig","Discovery+Sport":"Løsning ikke mulig","Viaplay (Film og Serier)":0,"Viaplay Total":2}];
-    let streamtilvalgnavn=["Viaplay (Film og Serier)","HBOMax","Discovery+underholdning","Discovery+Sport","CMore","SkyShowtime"];
-    let streamtilvalg=[{"Viaplay (Film og Serier)":79,HBOMax:69,"Discovery+underholdning":79,"Discovery+Sport":129,CMore:99,SkyShowtime:59}];
+    let kanaler=[udbyderdict["AllenteParabolTV_pakker"]];
+    //[{TV2:0,TV2Charlie:0,TV2Fri:0,TV2News:0,TV2Sport:2,TV2SportX:2,TV2Echo:0,TV3:0,TV3Max:2,"TV3 +":0,TV3Puls:0,TV3Sport:2,Kanal4:0,Kanal5:0,'6eren':0,Canal9:2,DiscoveryChannel:1,DK4:0,NationalGeographic:1,'3Sat':"Løsning ikke mulig",AlJazeera:1,Animalplanet:1,ARD:"Løsning ikke mulig",ARTE:"Løsning ikke mulig",BBCBrit:1,BBCEarth:1,BBCWorldNews:1,BlueHustler:"Løsning ikke mulig",Boomerang:1,CartoonNetwork:1,CBSReality:"Løsning ikke mulig",CNN:1,DisneyChannel:1,DisneyJunior:1,Euronews:"Løsning ikke mulig",Eurosport1:2,Eurosport2:2,"ID-InvestegationDiscovery":1,Mezzo:"Løsning ikke mulig",MTV:1,MTV80s:1,MTV90s:"Løsning ikke mulig",MTVHits:"Løsning ikke mulig",NationalGeographicWild:1,NDR:"Løsning ikke mulig","Nick jr.":1,Nickelodeon:1,NRK1:0,ZDF:"Løsning ikke mulig",SVT1:0,Folketinget:"Løsning ikke mulig",NRK2:"Løsning ikke mulig","TV4 Sverige":0,SVT2:0,"TV2Norge":"Løsning ikke mulig",ProSieben:"Løsning ikke mulig","Rai 1":"Løsning ikke mulig",See:1,TLC:1,VH1:1,"V sport golf":"Løsning ikke mulig","Viasat Explore":1,"Viasat History":1,"Viasat Nature":1,DiscoveryScience:1,"ESC/ESC1":"Løsning ikke mulig","Extreme Sport":"Løsning ikke mulig","HRT-TV1":"Løsning ikke mulig",MTVClub:"Løsning ikke mulig",MTVLive:"Løsning ikke mulig",Polonia:"Løsning ikke mulig","Sport Live":2}];
+    let stream=[streamdict["AllenteParabolTV_pakker"]];
+    //[{TV2PlayBasis:"Løsning ikke mulig",TV2PlayFavoritSport:"Løsning ikke mulig","TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:"Løsning ikke mulig",NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":"Løsning ikke mulig",CMore:"Løsning ikke mulig",SkyShowtime:1,"Discovery+underholdning":"Løsning ikke mulig","Discovery+Sport":"Løsning ikke mulig","Viaplay (Film og Serier)":0,"Viaplay Total":2}];
+    let streamtilvalg=[streamdict["Allente streamingtilvalg (pris)"]];
+    let streamtilvalgnavn=Object.keys(streamtilvalg);
     let ekstrastreaming=[];
     kanaler.sort();
     stream.sort();
     let AP=0;
     let APstream=0;
     let streamekstra=0;
+    let pakke=[pakkedict["AllenteParabolTV_pakker"]]
+    Object.keys(kanaler[0]).forEach(navn=>{
+        if(kanaler[0][navn]!=="Løsning ikke mulig"){
+          kanaler[0][navn]=Number(kanaler[0][navn])
+        }
+      })
+      Object.keys(stream[0]).forEach(stnavn=>{
+        if(stream[0][stnavn]!=="Løsning ikke mulig"){
+          stream[0][stnavn]=Number(stream[0][stnavn])
+        }
+      })
+      Object.keys(streamtilvalg[0]).forEach(sttnavn=>{
+        if(streamtilvalg[0][sttnavn]!=="Løsning ikke mulig"){
+          streamtilvalg[0][sttnavn]=Number(streamtilvalg[0][sttnavn])
+        }
+      })
+      Object.keys(pakke[0]).forEach(pnavn=>{
+        if(pakke[0][pnavn]!=="Løsning ikke mulig"){
+            pakke[0][pnavn]=Number(pakke[0][pnavn])
+        }  
+    })
             for (let kanal of kanaler){
                     for (let k of Object.keys(kanal)){
                         if(values.includes(k)){
@@ -1324,20 +2001,20 @@ let AllParaFunc=function(){
         if(!ekstrastreaming.length==0){
             ekstratekst="(inkl. tilvalgspakke: "+ekstrastreaming.join(", ")+")";
         }
-
-        pakkepris=[469,589,709];
-        pakke=[" (Basic pakke)"," (Standard pakke)", " (Premium pakke)"];
+        let APp=pakke[0]
+        let pakkepris=[APp["Lille pakke"],APp["Mellem pakke"],APp["Stor pakke"]]
+        let pakken=[" (Basic pakke)"," (Standard pakke)", " (Premium pakke)"];
         if(AP=="Løsning ikke mulig"){
             return "Løsning ikke mulig pga.:<br>("+ikkem.join(", ")+")";
         }
         else{
             if(APstream==0){
                 let prisAll=pakkepris[AP]+streamekstra;
-                return prisAll+" kr." +pakke[AP]+ekstratekst;
+                return prisAll+" kr." +pakken[AP]+ekstratekst;
             }
             else{
                 let prisAll=pakkepris[AP]+streamekstra;
-                return prisAll+APstream+" kr."+pakke[AP]+" "+ekstratekst+" (inkl. tilkøb af "+streamlist.join(", ")+")"+"<br>"+prisAll+" kr."+" (ekskl. "+streamlist.join(", ")+")"
+                return prisAll+APstream+" kr."+pakken[AP]+" "+ekstratekst+" (inkl. tilkøb af "+streamlist.join(", ")+")"+"<br>"+prisAll+" kr."+" (ekskl. "+streamlist.join(", ")+")"
             }
     }
 }
@@ -1473,3 +2150,111 @@ const btn1=document.querySelector("#btn1");
             swal.fire({title:"Priser på streaming<hr>",html:"<div class=align-left id=streamingpris>"+"<div>"+firstHalf.join("")+"</div>"+"<div>"+secondHalf.join("")+"</div>"+"</div>",width:"1000px"});
             });
 
+
+//Stofa vælg frit
+//#region
+
+//Importerer pakkepriser
+let valegselvpriser="";
+    $.ajax({
+      contentType: "application/x-www-form-urlencoded;charset=utf-8",
+      async:false,
+      url: "https://raw.githubusercontent.com/CWJNor/kanalcsv/main/VælgSelvFrit.csv",
+      success: function(csv) {
+          const output = Papa.parse(csv, {
+            header: true, // Convert rows to Objects using headers as properties
+          });
+          if (output.data) {
+            valegselvpriser=output.data;
+          } else {
+            console.log(output.errors);
+          }
+      },
+      error: function(jqXHR, textStatus, errorThrow){
+          console.log(textStatus);
+      }
+    
+  });
+  let vsliste=[];
+  let vsdict={}
+
+  //Tilføj tjek om kanalen er i enten Stofa eller Norlys
+  //Hvis tom så ignorer
+for(v of valegselvpriser.slice(0,-1)){
+  let overskrift=Object.keys(v);
+  let kanalnavnvs=v["Navn"];
+  overskrift.shift();
+  vsliste.push(kanalnavnvs);
+  for (ov of overskrift){
+    if (!vsdict[ov]) {
+      vsdict[ov] = {};
+    }
+  //if (v[ov].length==0){
+  //    v[ov]="Løsning ikke mulig";
+  //}
+  vsdict[ov][kanalnavnvs]=v[ov];
+  }
+}
+//kanalliste=kanalliste;
+vsliste.sort();
+
+for(key of Object.keys(vsdict)){
+const sortedObject = Object.fromEntries(
+    Object.entries(vsdict[key]).sort((a, b) => a[0].localeCompare(b[0]))
+    );
+    vsdict[key] = sortedObject;
+}
+
+const btn3=document.querySelector("#btn3");
+btn3.addEventListener("click",()=>{
+    vaelgselv=vsdict["Pris"];
+    keys=Object.keys(vaelgselv);
+   values=Object.values(vaelgselv);
+   let result3 = keys.map(function(e, i) {
+    return [e, values[i]];
+  });
+   
+  //let result1 = [];
+  //for (let i = 0; i < key.length*2; i++) {
+  // 
+  //        result1[i] = key[i]
+  //        result1[i+1]=vaelgselv[key[i]];
+  //}
+   vaelgselv=result3.flat(1)
+
+   //vaelgselv=["3sat","10","Internationalt","6'eren","40","Sport","Abu Dhabi","10","Internationalt","Al-Jazeera","10","Internationalt","Animal Planet","20","Dokumentar","Arte","10","Internationalt","BBC Brit","20","Underholdning",
+   //"BBC Earth","20","Dokumentar","BBC World News","20","Nyheder","Blue Hustler","10","Voksenunderholdning","Boomerang","20","Børn","C More Film","99","Streaming","Canal 9","40","Sport","Cartoon Network","20","Børn","CBS Reality","10","Dokumentar",
+   //"CNN","20","Nyheder","Discovery Channel","30","Dokumentar","Discovery Science","10","Dokumentar","Discovery Showcase","10","Dokumentar","Discovery World","10","Dokumentar","Disney Channel","30","Børn","Disney Junior","20","Børn",
+   //"ESC 1","10","Internationalt","Euronews","20","Nyheder","Eurosport 1","20","Sport","Eurosport 2","30","Sport","HRT-TV1","10","Internationalt","Hustler TV","99","Streaming (Voksen)","ID-Investigation Discovery","20","Dokumentar",
+   //"Mezzo","10","Musik","MTV","20","Musik","MTV Club","10","Musik","MTV Hits","10","Musik","MTV Live","20","Musik","MTV 90's","10","Musik","Nat Geo Wild","20","Dokumentar","National Geographic","20","Dokumentar","Nick Jr.","10","Børn","Nickelodeon","20","Børn",
+   //"Polonia","10","Internationalt","Pro 7","10","Internationalt","Rai 1", "10","Internationalt","Sat1","10","Internationalt","Sport Live","30","Sport","TLC","30","Underholdning","Travel Channel","10","Dokumentar","TV2 Fri","40","Underholdning",
+   //"TV2 News","40","Nyheder","TV2 Sport","40","Sport","TV2 Sport X","40","Sport","TV2 Echo","40","Underholdning","TV3 MAX","30","Sport","TV3 Sport","50","Sport","TV3+","50","Sport","TV5 Monde Europe","10","Internationalt","V series & film","99","Streaming",
+   //"VH1","20","Musik","Viasat Explore","10","Dokumentar","Viasat Golf","30","Sport","Viasat History","10","Dokumentar","Viasat Nature","10","Dokumentar","VOX","10","Underholdning","See","40","Sport"];
+    res1=[];
+        for(let v of vaelgselv){
+         res1.push("<span class='a'>"+v+"</span>")
+    }
+    vaelgselv=res1;
+    let result1 = [];
+    for (let i = 0; i < vaelgselv.length; i+=2) {
+        result1[i] = vaelgselv[i]+ vaelgselv[i+1].replace("kroner","kr.")+"<br>";
+    }
+    vaelgselv=result1
+    let middleIndex = Math.ceil(vaelgselv.length / 2);
+    let firstHalf = vaelgselv.splice(0, middleIndex);   
+    let Titel=["Navn","Pris"];
+    res=[];
+    for(let t of Titel){
+        res.push("<span class='a'>"+t.bold()+"</span>")
+    }
+    Titel=res;
+    let result = [];
+    for (let i = 0; i < Titel.length; i+=2) {
+        result[i] = Titel[i]+ Titel[i+1]+"<br> <hr id=vhr>";
+    }
+    firstHalf=result.concat(firstHalf)
+    let secondHalf = vaelgselv.splice(-middleIndex);
+    secondHalf=result.concat(secondHalf);
+    swal.fire({title:"VælgSelv Frit priser<hr id=vhr>",html:"<div class=align-left id=vaelgpris>"+"<div>"+firstHalf.join("")+"</div>"+"<div>"+secondHalf.join("")+"</div>"+"</div>",width:"90%"});
+})
+//#endregion
