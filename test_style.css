@@ -7,10 +7,10 @@
     font-weight: 450;
     font-size:25px;
 }
-#droptv2{
+#dropkategori{
     margin-left:20px;
 }
-.dropdown,.dropdown-trigger,#dropknaptv2,#dropknap,#dropknapvia,#dropknapdis{
+.dropdown,.dropdown-trigger,#dropknaptv2,#dropknap,#dropknapvia,#dropknapdis,#dropknapkategori{
     width:150px;
 }
 
@@ -97,7 +97,7 @@ p{
 #check{
     text-align: left;
     display: grid;
-    grid-template-columns:23% 23% 23% 23%;	
+    grid-template-columns:23% 23% 23% 23%;
     justify-content:space-evenly;
     margin-left:100px;
 }
@@ -114,20 +114,20 @@ p{
     position:absolute;
     bottom:auto;
     width: 100px;
-    left:44.5%;
+    left:88%;
     background-color:#eee7e2;
 }
 #Stofa{
     position:absolute;
     bottom:auto;
     width: 100px;
-    left:50%;
+    left:82.5%;
     background-color:#eee7e2;
 }
 
 #ryd{
     position:absolute;
-    right:20px;
+    left:93.5%;
 }
 
 #pointcheck{
