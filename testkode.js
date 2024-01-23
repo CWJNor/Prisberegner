@@ -312,7 +312,6 @@ TV2drop.childNodes[1].addEventListener("click",function(){
 let kategorilist=Array.from(new Set(genreliste));
 let katdrop=document.querySelector("#kategoridropchild");
 
-console.log(kategorilist);
 
 //Hent kanaler
 for (let kat of kategorilist){
