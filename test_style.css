@@ -310,3 +310,10 @@ hr{
     font-size: 35px;
     font-weight: bold;
 }
+
+.icon{
+    height:20px;
+    width:20px;
+    vertical-align: text-bottom;
+    margin:0px;
+}

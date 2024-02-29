@@ -1199,7 +1199,7 @@ let NVFfunc=function(){
             return basepris+" kr.";
         }
         else{
-            return NVFstream+basepris+" kr. (inkl. tilkøb af "+streamlist.join(", ")+")"+"<br>"+basepris+" kr. (ekskl. "+streamlist.join(", ")+")";
+            return NVFstream+basepris+" kr. (inkl. tilkøb af "+streamlist.join(", ")+" direkte hos streamingudbyderen)"+"<br>"+basepris+" kr. (ekskl. "+streamlist.join(", ")+")";
         }
         }
 //Norlys Vælg 8
@@ -1277,7 +1277,7 @@ let NVODTTfunc=function(){
                 return basepris+" kr."+" ("+NVODTT+" ud af 8 kanaler valgt)";
             }
             else{
-                return NVODTTstream+basepris+" kr. (inkl. tilkøb af "+streamlist.join(", ")+")"+"<br>"+basepris+" kr. (ekskl. "+streamlist.join(", ")+") ("+NVODTT+" ud af 8 kanaler valgt)";
+                return NVODTTstream+basepris+" kr. (inkl. tilkøb af "+streamlist.join(", ")+" direkte hos streamingudbyderen)"+"<br>"+basepris+" kr. (ekskl. "+streamlist.join(", ")+") ("+NVODTT+" ud af 8 kanaler valgt)";
                  }
             }
 } 
@@ -1349,7 +1349,7 @@ let NVAfunc=function(){
             return basepris+" kr.";
         }
         else{
-            return NVAstream+basepris+" kr. (inkl. tilkøb af "+streamlist.join(", ")+")"+"<br>"+basepris+" kr. (ekskl. "+streamlist.join(", ")+")";
+            return NVAstream+basepris+" kr. (inkl. tilkøb af "+streamlist.join(", ")+" direkte hos streamingudbyderen)"+"<br>"+basepris+" kr. (ekskl. "+streamlist.join(", ")+")";
         }
     }
 
@@ -1436,7 +1436,7 @@ let NV4func=function(){
                 return basepris+" kr."+" ("+NV4+" ud af 4 kanaler valgt)";
             }
             else{
-                return NV4stream+basepris+" kr. (inkl. tilkøb af "+streamlist.join(", ")+")"+"<br>"+basepris+" kr. (ekskl. "+streamlist.join(", ")+") ("+NV4+" ud af 4 kanaler valgt)";
+                return NV4stream+basepris+" kr. (inkl. tilkøb af "+streamlist.join(", ")+" direkte hos streamingudbyderen)"+"<br>"+basepris+" kr. (ekskl. "+streamlist.join(", ")+") ("+NV4+" ud af 4 kanaler valgt)";
                  }
             }
 } 
@@ -1522,7 +1522,7 @@ let NVOfunc=function(){
                 return basepris+" kr."+" ("+NVO+" ud af 8 kanaler valgt)";
             }
             else{
-                return NVOstream+basepris+" kr. (inkl. tilkøb af "+streamlist.join(", ")+")"+"<br>"+basepris+" kr. (ekskl. "+streamlist.join(", ")+") ("+NVO+" ud af 8 kanaler valgt)";
+                return NVOstream+basepris+" kr. (inkl. tilkøb af "+streamlist.join(", ")+" direkte hos streamingudbyderen)"+"<br>"+basepris+" kr. (ekskl. "+streamlist.join(", ")+") ("+NVO+" ud af 8 kanaler valgt)";
                  }
             }
 } 
@@ -1609,7 +1609,7 @@ let NVTfunc=function(){
                 return basepris+" kr."+" ("+NVT+" ud af 20 kanaler valgt)";
             }
             else{
-                return NVTstream+basepris+" kr. (inkl. tilkøb af "+streamlist.join(", ")+")"+"<br>"+basepris+" kr. (ekskl. "+streamlist.join(", ")+") ("+NVT+" ud af 20 kanaler valgt)";
+                return NVTstream+basepris+" kr. (inkl. tilkøb af "+streamlist.join(", ")+" direkte hos streamingudbyderen)"+"<br>"+basepris+" kr. (ekskl. "+streamlist.join(", ")+") ("+NVT+" ud af 20 kanaler valgt)";
                  }
             }
 } 
@@ -1686,7 +1686,7 @@ let NPLfunc=function(){
                 return pakkepris[NPL]+" kr." +pakken[NPL];
             }
             else{
-                return NPLstream+pakkepris[NPL]+" kr."+pakken[NPL]+" (inkl. tilkøb af "+streamlist.join(", ")+")"+"<br>"+pakkepris[NPL]+" kr. (ekskl. "+streamlist.join(", ")+")";
+                return NPLstream+pakkepris[NPL]+" kr."+pakken[NPL]+" (inkl. tilkøb af "+streamlist.join(", ")+" direkte hos streamingudbyderen)"+"<br>"+pakkepris[NPL]+" kr. (ekskl. "+streamlist.join(", ")+")";
             }
     }
 }
@@ -1763,7 +1763,7 @@ let SPLfunc=function(){
                 return pakkepris[SPL]+" kr." +pakken[SPL];
             }
             else{
-                return SPLstream+pakkepris[SPL]+" kr."+pakken[SPL]+" (inkl. tilkøb af "+streamlist.join(", ")+")"+"<br>"+pakkepris[SPL]+" kr. (ekskl. "+streamlist.join(", ")+")";
+                return SPLstream+pakkepris[SPL]+" kr."+pakken[SPL]+" (inkl. tilkøb af "+streamlist.join(", ")+" direkte hos streamingudbyderen)"+"<br>"+pakkepris[SPL]+" kr. (ekskl. "+streamlist.join(", ")+")";
             }
     }
 }
@@ -2211,8 +2211,6 @@ const btn = document.querySelector('#btn');
                 values.push(checkbox.value);
             });
             let NVF=NVFfunc();
-            //let SPL=SPLfunc();{name:"SPL",val:SPL}
-            //let SVS=SVSfunc();{name:"SVS",val:SVS}
             let YouP=YouPfunc();
             let NVO=NVOfunc();
             let NVODTT=NVODTTfunc();
@@ -2243,15 +2241,9 @@ const btn = document.querySelector('#btn');
                     if (u.name=="NVODTT"){
                         NVODTT="<span class=cheap>"+NVODTT+"</span>";
                     }
-                   // if (u.name=="SPL"){
-                    //    SPL="<span class=cheap>"+SPL+"</span>"
-                    //}
                     if (u.name=="NPL"){
-                        NPL="<span class=cheap>"+NPL+"</span>"
+                        NPL="<span class=cheap>"+NPL+'</span>'
                     }
-                    //if (u.name=="SVS"){
-                    //    SVS="<span class=cheap>"+SVS+"</span>";
-                   // }
                     if (u.name=="YouP"){
                         YouP="<span class=cheap>"+YouP+"</span>";
                     }
@@ -2278,24 +2270,20 @@ const btn = document.querySelector('#btn');
             
             //pris.push("Norlys Vælg Frit: ".bold()+NVF);
             //pris.push("<br>");
-            pris.push("Norlys pakkeløsning (OTT): ".bold()+NPL);
+            pris.push("Norlys pakkeløsning<img  alt='streaming' src='streaming.png' class='icon'></img><img  alt='kabel' src='fibercoax.png' class='icon'></img>: ".bold()+NPL);
             pris.push("<br>");
-            pris.push("<br>"+"Norlys Vælg 4 (OTT): ".bold()+NV4);
+            pris.push("<br>"+"Norlys Vælg 4<img  alt='streaming' src='streaming.png' class='icon'></img>: ".bold()+NV4);
             pris.push("<br>");
-            pris.push("<br>"+"Norlys Vælg 8 (OTT): ".bold()+NVO);
+            pris.push("<br>"+"Norlys Vælg 8<img  alt='streaming' src='streaming.png' class='icon'></img>: ".bold()+NVO);
             pris.push("<br>");
-            pris.push("<br>"+"Norlys Vælg 20 (OTT): ".bold()+NVT);
+            pris.push("<br>"+"Norlys Vælg 20<img  alt='streaming' src='streaming.png' class='icon'></img>: ".bold()+NVT);
             pris.push("<br>");
-            pris.push("<br>"+"Norlys Flex (DTT): ".bold()+NVF);
+            pris.push("<br>"+"Norlys Flex<img  alt='antenne' src='antenne.png' class='icon'></img>: ".bold()+NVF);
             pris.push("<br>");
-            pris.push("<br>"+"Norlys Flex 8 (DTT): ".bold()+NVODTT);
+            pris.push("<br>"+"Norlys Flex 8<img  alt='antenne' src='antenne.png' class='icon'></img>: ".bold()+NVODTT);
             pris.push("<br>");
-            pris.push("<br>"+"Norlys Stor Pakke (DTT): ".bold()+NVA);
+            pris.push("<br>"+"Norlys Stor TV-Pakke<img  alt='antenne' src='antenne.png' class='icon'></img>: ".bold()+NVA);
             pris.push("<br>");
-            //pris.push("<br>"+"Stofa pakkeløsning: ".bold()+SPL);
-            //pris.push("<br>");
-            //pris.push("<br>"+"Stofa Vælg Selv: ".bold()+SVS);
-            //pris.push("<br>");
             pris.push("<br>"+"YouSee Play: ".bold()+YouP);
             pris.push("<br>");
             pris.push("<br>"+"Allente Streaming: ".bold()+AS);
@@ -2305,14 +2293,11 @@ const btn = document.querySelector('#btn');
                 swal.fire("Ingen kanaler valgt");
             }
             else{
-                swal.fire({title:"Priser:",html:'<div class="align-left">'+pris.join("")+'</div>',customClass:"swall_wide"});
+                swal.fire({title:"Priser:",html:'<div class="align-left">'+pris.join("")+'<br><br><span style="font-style:italic"> OBS: Se hjemmeside for foreningspriser</span></div>',customClass:"swall_wide"});
             };
             pris=[];
             values=[];
         });    
-
-//let streamingpriser=[{"C more":99,"Discovery+ Underholdning (m. reklamer)":49,"Discovery+ Underholdning":79,"Discovery+ Underholdning + Live":99,"Discovery+ Sport":129,"Disney+ (Årspris: 790 kr.)":79,"HBO Max (Årspris: 599 kr.)":79,"Netflix Basis HD 1 enhed": 79,"Netflix Standard":114,"Netflix Premium":149,"Nordisk Film+":49,"SkyShowtime":69,"TV2 Play Basis (m. reklamer)":69,"TV2 Play Basis (u. reklamer)":99,"TV2 Play Favorit (m. reklamer)":129,"TV2 Play Favorit (u. reklamer)": 159,"TV2 Play Favorit+Sport (m. reklamer)":189,"TV2 Play Favorit+Sport (u. reklamer)":219,"Viaplay (Film og Serier)":129,"Viaplay Total": 449}];
-//streamingpriser.sort();
 
 let streamingpriser=[streamalldict["Pris"]];
 streamingpriser.sort();
@@ -2350,7 +2335,7 @@ btn4.addEventListener('click',(event)=>{
             swal.fire("C More kan ikke købes direkte. Fjern C More for at se udregning");
         }
         else{
-        swal.fire({title:"Pris for valgte streamingtjenester<hr>",html:"<div class=align-left id=streamingprisberegn> <p style='font-size:32px;'>"+streamprisprint+" kr.</p><br> Ved køb direkte hos udbyder af: <br><br>"+match.join(",<br>")+ "</div>",width:"1000px"});
+        swal.fire({title:"Pris for valgte streamingtjenester<hr>",html:"<div class=align-left id=streamingprisberegn> <p style='font-size:32px;'>"+streamprisprint+" kr.</p><br> Ved køb direkte hos streamingudbyderen af: <br><br>"+match.join(",<br>")+ "</div>",width:"1000px"});
     }})
        
 
@@ -2410,9 +2395,6 @@ for(v of valegselvpriser.slice(0,-1)){
     if (!vsdict[ov]) {
       vsdict[ov] = {};
     }
-  //if (v[ov].length==0){
-  //    v[ov]="Løsning ikke mulig";
-  //}
   vsdict[ov][kanalnavnvs]=v[ov];
   }
 }
@@ -2436,43 +2418,5 @@ btn3.addEventListener("click",()=>{
         position:"top",
         confirmButtonText: 'OK'
       });
-
 })
-//btn3.addEventListener("click",()=>{
-//    vaelgselv=vsdict["Pris"];
-//    keys=Object.keys(vaelgselv);
-//   values=Object.values(vaelgselv);
-//   let result3 = keys.map(function(e, i) {
-//    return [e, values[i]];
-//  });
-//   
-//   vaelgselv=result3.flat(1)
-//
-//    res1=[];
-//        for(let v of vaelgselv){
-//         res1.push("<span class='a'>"+v+"</span>")
-//    }
-//    vaelgselv=res1;
-//    let result1 = [];
-//    for (let i = 0; i < vaelgselv.length; i+=2) {
-//        result1[i] = vaelgselv[i]+ vaelgselv[i+1].replace("kroner","kr.")+"<br>";
-//    }
-//    vaelgselv=result1
-//    let middleIndex = Math.ceil(vaelgselv.length / 2);
-//    let firstHalf = vaelgselv.splice(0, middleIndex);   
-//    let Titel=["Navn","Pris"];
-//    res=[];
-//    for(let t of Titel){
-//        res.push("<span class='a'>"+t.bold()+"</span>")
-//    }
-//    Titel=res;
-//    let result = [];
-//    for (let i = 0; i < Titel.length; i+=2) {
-//        result[i] = Titel[i]+ Titel[i+1]+"<br> <hr id=vhr>";
-//    }
-//    firstHalf=result.concat(firstHalf)
-//    let secondHalf = vaelgselv.splice(-middleIndex);
-//    secondHalf=result.concat(secondHalf);
-//    swal.fire({title:"VælgSelv Frit priser<hr id=vhr>",html:"<div class=align-left id=vaelgpris>"+"<div>"+firstHalf.join("")+"</div>"+"<div>"+secondHalf.join("")+"</div>"+"</div>",width:"90%"});
-//})
 //#endregion
