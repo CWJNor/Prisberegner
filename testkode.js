@@ -9,7 +9,7 @@ let myvar=""
 $.ajax({
   contentType: "application/x-www-form-urlencoded;charset=utf-8",
   async:false,
-  url: "https://raw.githubusercontent.com/CWJNor/kanalcsv/main/kanaler_2024.csv",
+  url: "https://raw.githubusercontent.com/CWJNor/priscsv/main/kanaler_2024.csv",
   success: function(csv) {
       const output = Papa.parse(csv, {
         header: true, // Convert rows to Objects using headers as properties
@@ -63,7 +63,7 @@ let genre=""
 $.ajax({
   contentType: "application/x-www-form-urlencoded;charset=utf-8",
   async:false,
-  url: "https://raw.githubusercontent.com/CWJNor/kanalcsv/main/genre_2024.csv",
+  url: "https://raw.githubusercontent.com/CWJNor/priscsv/main/genre_2024.csv",
   success: function(csv) {
       const output = Papa.parse(csv, {
         header: true, // Convert rows to Objects using headers as properties
@@ -168,7 +168,7 @@ let beskrivelser=[{"TV2":"Danmarks mest sete tv-kanal, som samler danskerne om a
 "Rai 1":"Rai Uno sender underholdning, nyheder, sport og film 24 timer i døgnet.",
 "See":"See byder på originalt dansk indhold, populære serier og masser af sport.",
 "TLC":"På TLC er der både tid til refleksion, gråd og grin. Her finder du inspirerende og autentiske programmer med humor og kant.",
-"VH1":"VH1 er en musikkanal, der sender musikvideoer døgnet rundt. Vær opdateret på de seneste hitlister og se med, når stjernerne præsenterer deres helt egen top 10.",
+"Nick Music":"Nick Music erstatter VH1",
 "V sport golf":"V Sport Golf sender masser af live-golf året rundt med danske kommentatorer.",
 "Viasat Explore":"Viasat Explore udfordrer din eventyrlyst. Kanalen er garant for eventyr og ekstreme oplevelser. Viasat Explore sender en god blanding af dybdeborende dokumentarserier og udfordrende ekspeditioner.",
 "Viasat History":"Hvis du er vild med historiens vingesus og dokumentarer om fordums tid, kan du booste din viden med Viasat History.",
@@ -518,33 +518,33 @@ disdrop.childNodes[1].addEventListener("click",function(){
 
 //Stofa knap
 //#region
-Stofaknap=document.querySelector("#Stofa");
-let clickedS=false;
-StofaKanaler=[];
-Stofadict=udbyderdict["StofaPakkeloesning_pakker"];
-for(k of Object.keys(Stofadict)){
-    if(Stofadict[k]=="0.0"){
-        StofaKanaler.push(k);
-    }
-}
-Stofaknap.addEventListener("click",function(){
-    let kan=document.getElementsByName("Kanal");
-    if(clickedS==true){
-        clickedS=false;
-        for (let k of kan){
-            if (StofaKanaler.includes(k.value)){
-                k.checked=false;
-            }
-        }}
-    else{
-        clickedS=true;
-        for (let k of kan){
-            if (StofaKanaler.includes(k.value)){
-                k.checked=true;
-            }
-        }
-}
-})
+//Stofaknap=document.querySelector("#Stofa");
+//let clickedS=false;
+//StofaKanaler=[];
+//Stofadict=udbyderdict["StofaPakkeloesning_pakker"];
+//for(k of Object.keys(Stofadict)){
+//    if(Stofadict[k]=="0.0"){
+//        StofaKanaler.push(k);
+//    }
+//}
+//Stofaknap.addEventListener("click",function(){
+//    let kan=document.getElementsByName("Kanal");
+//    if(clickedS==true){
+//        clickedS=false;
+//        for (let k of kan){
+//            if (StofaKanaler.includes(k.value)){
+//                k.checked=false;
+//            }
+//        }}
+//    else{
+//        clickedS=true;
+//        for (let k of kan){
+//            if (StofaKanaler.includes(k.value)){
+//                k.checked=true;
+//            }
+//        }
+//}
+//})
 //#endregion
 
 //Ryd knap
@@ -765,33 +765,33 @@ for (let i=0;i<names.length;i++) {
     pointtal.classList.add("hidden");
     //Stofa pointknap
     let stofaaktiv=false; 
-    let kanaler=[udbyderdict["StofaVaelgSelv_point"]];
-    //[{TV2:0,TV2Charlie:0,TV2Fri:1,TV2News:1,TV2Sport:2,TV2SportX:2,TV2Echo:1,TV3:0,TV3Max:2,"TV3 +":3,TV3Puls:0,TV3Sport:3,Kanal4:0,Kanal5:0,'6eren':1,Canal9:1,DiscoveryChannel:1,DK4:0,NationalGeographic:1,'3Sat':1,AlJazeera:1,Animalplanet:1,ARD:"Løsning ikke mulig",ARTE:1,BBCBrit:1,BBCEarth:1,BBCWorldNews:1,BlueHustler:1,Boomerang:1,CartoonNetwork:1,CBSReality:1,CNN:1,DisneyChannel:1,DisneyJunior:1,Euronews:1,Eurosport1:1,Eurosport2:2,"ID-InvestegationDiscovery":1,Mezzo:1,MTV:1,MTV80s:1,MTV90s:1,MTVHits:1,NationalGeographicWild:1,NDR:0,"Nick jr.":1,Nickelodeon:1,NRK1:0,ZDF:0,SVT1:0,Folketinget:0,NRK2:0,"TV4 Sverige":0,SVT2:0,"TV2Norge":0,ProSieben:1,"Rai 1":1,See:2,TLC:1,VH1:1,"V sport golf":1,"Viasat Explore":1,"Viasat History":1,"Viasat Nature":1,DiscoveryScience:1,"ESC/ESC1":1,"Extreme Sport":1,"HRT-TV1":1,MTVClub:1,MTVLive:1,Polonia:1,"Sport Live":1}];
-    kanaler.sort();
-    let pointknap=document.querySelector("#pointknap");
-    pointknap.addEventListener("click",function(){
-        if(stofaaktiv){
-            stofaaktiv=false;
-            pointknap.classList.remove("is-primary");
-        }
-        else{
-            stofaaktiv=true;
-            pointknap.classList.add("is-primary");
-        }
-        if(norlysaktiv){
-            norlysaktiv=false;
-            prisknap.classList.remove("is-primary");
-        }
-        else{
-            pointtal.classList.toggle("hidden");
-        }
-        if(kanaler[0][names[i]]!=="Løsning ikke mulig"){
-            pointtal.innerHTML="("+Number(kanaler[0][names[i]])+")";
-        }
-        else{
-            pointtal.innerHTML='\u00A0'
-        }
-    })
+    //let kanaler=[udbyderdict["StofaVaelgSelv_point"]];
+    ////[{TV2:0,TV2Charlie:0,TV2Fri:1,TV2News:1,TV2Sport:2,TV2SportX:2,TV2Echo:1,TV3:0,TV3Max:2,"TV3 +":3,TV3Puls:0,TV3Sport:3,Kanal4:0,Kanal5:0,'6eren':1,Canal9:1,DiscoveryChannel:1,DK4:0,NationalGeographic:1,'3Sat':1,AlJazeera:1,Animalplanet:1,ARD:"Løsning ikke mulig",ARTE:1,BBCBrit:1,BBCEarth:1,BBCWorldNews:1,BlueHustler:1,Boomerang:1,CartoonNetwork:1,CBSReality:1,CNN:1,DisneyChannel:1,DisneyJunior:1,Euronews:1,Eurosport1:1,Eurosport2:2,"ID-InvestegationDiscovery":1,Mezzo:1,MTV:1,MTV80s:1,MTV90s:1,MTVHits:1,NationalGeographicWild:1,NDR:0,"Nick jr.":1,Nickelodeon:1,NRK1:0,ZDF:0,SVT1:0,Folketinget:0,NRK2:0,"TV4 Sverige":0,SVT2:0,"TV2Norge":0,ProSieben:1,"Rai 1":1,See:2,TLC:1,VH1:1,"V sport golf":1,"Viasat Explore":1,"Viasat History":1,"Viasat Nature":1,DiscoveryScience:1,"ESC/ESC1":1,"Extreme Sport":1,"HRT-TV1":1,MTVClub:1,MTVLive:1,Polonia:1,"Sport Live":1}];
+    //kanaler.sort();
+    //let pointknap=document.querySelector("#pointknap");
+    //pointknap.addEventListener("click",function(){
+    //    if(stofaaktiv){
+    //        stofaaktiv=false;
+    //        pointknap.classList.remove("is-primary");
+    //    }
+    //    else{
+    //        stofaaktiv=true;
+    //        pointknap.classList.add("is-primary");
+    //    }
+    //    if(norlysaktiv){
+    //        norlysaktiv=false;
+    //        prisknap.classList.remove("is-primary");
+    //    }
+    //    else{
+    //        pointtal.classList.toggle("hidden");
+    //    }
+    //    if(kanaler[0][names[i]]!=="Løsning ikke mulig"){
+    //        pointtal.innerHTML="("+Number(kanaler[0][names[i]])+")";
+    //    }
+    //    else{
+    //        pointtal.innerHTML='\u00A0'
+    //    }
+    //})
 
     //Norlys knap
     let kanalpriser=[udbyderdict["NorlysVaelgFritDTT_pris"]];
@@ -844,7 +844,7 @@ let mystream="";
     $.ajax({
       contentType: "application/x-www-form-urlencoded;charset=utf-8",
       async:false,
-      url: "https://raw.githubusercontent.com/CWJNor/kanalcsv/main/streaming_2024.csv",
+      url: "https://raw.githubusercontent.com/CWJNor/priscsv/main/streaming_2024.csv",
       success: function(csv) {
           const output = Papa.parse(csv, {
             header: true, // Convert rows to Objects using headers as properties
@@ -946,31 +946,31 @@ for (let i=0;i<stream.length;i++) {
     pointtal.classList.add("hidden");
     //Stofa pointknap
     let stofaaktiv=false; 
-    let streamnavn=[streamdict["StofaVaelgSelv_point"]]
-    //[{TV2PlayBasis:2,TV2PlayFavoritSport:8,"TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:4,NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":3,CMore:5,SkyShowtime:"Løsning ikke mulig","Discovery+underholdning":2,"Discovery+Sport":8,"Viaplay (Film og Serier)":6,"Viaplay Total":"Løsning ikke mulig"}]; 
-    streamnavn.sort();
-    let pointknap=document.querySelector("#pointknap");
-    pointknap.addEventListener("click",function(){
-        if(stofaaktiv){
-            stofaaktiv=false;
-        }
-        else{
-            stofaaktiv=true;
-        }
-        if(norlysaktiv){
-            norlysaktiv=false;
-        }
-        else{
-            pointtal.classList.toggle("hidden");
-        }
-        //pointknap.classList.toggle("is-primary");
-        if(streamnavn[0][stream[i]]!=="Løsning ikke mulig"){
-            pointtal.innerHTML="("+Number(streamnavn[0][stream[i]])+")";
-        }
-        else{
-            pointtal.innerHTML='\u00A0'
-        }
-    })
+    //let streamnavn=[streamdict["StofaVaelgSelv_point"]]
+    ////[{TV2PlayBasis:2,TV2PlayFavoritSport:8,"TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:4,NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":3,CMore:5,SkyShowtime:"Løsning ikke mulig","Discovery+underholdning":2,"Discovery+Sport":8,"Viaplay (Film og Serier)":6,"Viaplay Total":"Løsning ikke mulig"}]; 
+    //streamnavn.sort();
+    //let pointknap=document.querySelector("#pointknap");
+    //pointknap.addEventListener("click",function(){
+    //    if(stofaaktiv){
+    //        stofaaktiv=false;
+    //    }
+    //    else{
+    //        stofaaktiv=true;
+    //    }
+    //    if(norlysaktiv){
+    //        norlysaktiv=false;
+    //    }
+    //    else{
+    //        pointtal.classList.toggle("hidden");
+    //    }
+    //    //pointknap.classList.toggle("is-primary");
+    //    if(streamnavn[0][stream[i]]!=="Løsning ikke mulig"){
+    //        pointtal.innerHTML="("+Number(streamnavn[0][stream[i]])+")";
+    //    }
+    //    else{
+    //        pointtal.innerHTML='\u00A0'
+    //    }
+    //})
     //Norlys prisknap
     let streamNor=[streamdict["NorlysVaelgFritDTT_pris"]]
     //[{TV2PlayBasis:"Løsning ikke mulig",TV2PlayFavoritSport:"Løsning ikke mulig","TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:"Løsning ikke mulig",NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":"Løsning ikke mulig",CMore:"Løsning ikke mulig",SkyShowtime:"Løsning ikke mulig","Discovery+underholdning":"Løsning ikke mulig","Discovery+Sport":"Løsning ikke mulig","Viaplay (Film og Serier)":"Løsning ikke mulig","Viaplay Total":"Løsning ikke mulig"}];
@@ -1020,7 +1020,7 @@ let mystreamall="";
     $.ajax({
       contentType: "application/x-www-form-urlencoded;charset=utf-8",
       async:false,
-      url: "https://raw.githubusercontent.com/CWJNor/kanalcsv/main/streampriser_2024.csv",
+      url: "https://raw.githubusercontent.com/CWJNor/priscsv/main/streampriser_2024.csv",
       success: function(csv) {
           const output = Papa.parse(csv, {
             header: true, // Convert rows to Objects using headers as properties
@@ -1072,7 +1072,7 @@ let mypakke="";
     $.ajax({
       contentType: "application/x-www-form-urlencoded;charset=utf-8",
       async:false,
-      url: "https://raw.githubusercontent.com/CWJNor/kanalcsv/main/Pakkepriser_2024.csv",
+      url: "https://raw.githubusercontent.com/CWJNor/priscsv/main/Pakkepriser_2024.csv",
       success: function(csv) {
           const output = Papa.parse(csv, {
             header: true, // Convert rows to Objects using headers as properties
@@ -2211,8 +2211,8 @@ const btn = document.querySelector('#btn');
                 values.push(checkbox.value);
             });
             let NVF=NVFfunc();
-            let SPL=SPLfunc();
-            let SVS=SVSfunc();
+            //let SPL=SPLfunc();{name:"SPL",val:SPL}
+            //let SVS=SVSfunc();{name:"SVS",val:SVS}
             let YouP=YouPfunc();
             let NVO=NVOfunc();
             let NVODTT=NVODTTfunc();
@@ -2225,7 +2225,7 @@ const btn = document.querySelector('#btn');
 
             let minpris=Number.MAX_VALUE;
             let expr="([0-9]+) .*"
-            Udbyderliste=[{name:"NVODTT",val:NVODTT},{name:"NVF",val:NVF},{name:"SPL",val:SPL},{name:"NPL",val:NPL},{name:"SVS",val:SVS},{name:"YouP",val:YouP},{name:"NVO",val:NVO},{name:"NV4",val:NV4},{name:"NVT",val:NVT},{name:"NVA",val:NVA},{name:"AS",val:AS},{name:"AP",val:AP}];
+            Udbyderliste=[{name:"NVODTT",val:NVODTT},{name:"NVF",val:NVF},{name:"NPL",val:NPL},{name:"YouP",val:YouP},{name:"NVO",val:NVO},{name:"NV4",val:NV4},{name:"NVT",val:NVT},{name:"NVA",val:NVA},{name:"AS",val:AS},{name:"AP",val:AP}];
             for (let u of Udbyderliste){
                 val=u.val.replace(expr,"");
                 val=parseInt(val);
@@ -2243,15 +2243,15 @@ const btn = document.querySelector('#btn');
                     if (u.name=="NVODTT"){
                         NVODTT="<span class=cheap>"+NVODTT+"</span>";
                     }
-                    if (u.name=="SPL"){
-                        SPL="<span class=cheap>"+SPL+"</span>"
-                    }
+                   // if (u.name=="SPL"){
+                    //    SPL="<span class=cheap>"+SPL+"</span>"
+                    //}
                     if (u.name=="NPL"){
                         NPL="<span class=cheap>"+NPL+"</span>"
                     }
-                    if (u.name=="SVS"){
-                        SVS="<span class=cheap>"+SVS+"</span>";
-                    }
+                    //if (u.name=="SVS"){
+                    //    SVS="<span class=cheap>"+SVS+"</span>";
+                   // }
                     if (u.name=="YouP"){
                         YouP="<span class=cheap>"+YouP+"</span>";
                     }
@@ -2286,16 +2286,16 @@ const btn = document.querySelector('#btn');
             pris.push("<br>");
             pris.push("<br>"+"Norlys Vælg 20 (OTT): ".bold()+NVT);
             pris.push("<br>");
-            pris.push("<br>"+"Norlys Vælg Frit (DTT): ".bold()+NVF);
+            pris.push("<br>"+"Norlys Flex (DTT): ".bold()+NVF);
             pris.push("<br>");
-            pris.push("<br>"+"Norlys Vælg 8 (DTT): ".bold()+NVODTT);
+            pris.push("<br>"+"Norlys Flex 8 (DTT): ".bold()+NVODTT);
             pris.push("<br>");
-            pris.push("<br>"+"Norlys Vælg Alt (DTT): ".bold()+NVA);
+            pris.push("<br>"+"Norlys Stor Pakke (DTT): ".bold()+NVA);
             pris.push("<br>");
-            pris.push("<br>"+"Stofa pakkeløsning: ".bold()+SPL);
-            pris.push("<br>");
-            pris.push("<br>"+"Stofa Vælg Selv: ".bold()+SVS);
-            pris.push("<br>");
+            //pris.push("<br>"+"Stofa pakkeløsning: ".bold()+SPL);
+            //pris.push("<br>");
+            //pris.push("<br>"+"Stofa Vælg Selv: ".bold()+SVS);
+            //pris.push("<br>");
             pris.push("<br>"+"YouSee Play: ".bold()+YouP);
             pris.push("<br>");
             pris.push("<br>"+"Allente Streaming: ".bold()+AS);
@@ -2316,6 +2316,43 @@ const btn = document.querySelector('#btn');
 
 let streamingpriser=[streamalldict["Pris"]];
 streamingpriser.sort();
+
+
+
+
+
+let btn4=document.querySelector("#btn4");
+btn4.addEventListener('click',(event)=>{
+
+    let streamprisprint=0;
+    valgte=[]
+    let checkboxes = document.querySelectorAll('input[name="Kanal"]:checked');
+            
+    checkboxes.forEach((checkbox) => {    
+        valgte.push(checkbox.value);
+    });
+
+
+    let match=[];
+    for (let stream of streamingpriser){
+        for (let s of Object.keys(stream)){
+            for(v in valgte){
+                if(valgte[v]==s){
+                    match.push(valgte[v])
+                    streamprisprint+=stream[s];
+                }
+            }
+        }}
+        if (match.length==0){
+            swal.fire("Ingen streamingtjenester valgt");
+        }
+        else if(match.includes("C More")){
+            swal.fire("C More kan ikke købes direkte. Fjern C More for at se udregning");
+        }
+        else{
+        swal.fire({title:"Pris for valgte streamingtjenester<hr>",html:"<div class=align-left id=streamingprisberegn> <p style='font-size:32px;'>"+streamprisprint+" kr.</p><br> Ved køb direkte hos udbyder af: <br><br>"+match.join(",<br>")+ "</div>",width:"1000px"});
+    }})
+       
 
 const btn1=document.querySelector("#btn1");
         btn1.addEventListener('click',(event)=>{
@@ -2390,55 +2427,52 @@ const sortedObject = Object.fromEntries(
 }
 
 const btn3=document.querySelector("#btn3");
-btn3.addEventListener("click",()=>{
-    vaelgselv=vsdict["Pris"];
-    keys=Object.keys(vaelgselv);
-   values=Object.values(vaelgselv);
-   let result3 = keys.map(function(e, i) {
-    return [e, values[i]];
-  });
-   
-  //let result1 = [];
-  //for (let i = 0; i < key.length*2; i++) {
-  // 
-  //        result1[i] = key[i]
-  //        result1[i+1]=vaelgselv[key[i]];
-  //}
-   vaelgselv=result3.flat(1)
 
-   //vaelgselv=["3sat","10","Internationalt","6'eren","40","Sport","Abu Dhabi","10","Internationalt","Al-Jazeera","10","Internationalt","Animal Planet","20","Dokumentar","Arte","10","Internationalt","BBC Brit","20","Underholdning",
-   //"BBC Earth","20","Dokumentar","BBC World News","20","Nyheder","Blue Hustler","10","Voksenunderholdning","Boomerang","20","Børn","C More Film","99","Streaming","Canal 9","40","Sport","Cartoon Network","20","Børn","CBS Reality","10","Dokumentar",
-   //"CNN","20","Nyheder","Discovery Channel","30","Dokumentar","Discovery Science","10","Dokumentar","Discovery Showcase","10","Dokumentar","Discovery World","10","Dokumentar","Disney Channel","30","Børn","Disney Junior","20","Børn",
-   //"ESC 1","10","Internationalt","Euronews","20","Nyheder","Eurosport 1","20","Sport","Eurosport 2","30","Sport","HRT-TV1","10","Internationalt","Hustler TV","99","Streaming (Voksen)","ID-Investigation Discovery","20","Dokumentar",
-   //"Mezzo","10","Musik","MTV","20","Musik","MTV Club","10","Musik","MTV Hits","10","Musik","MTV Live","20","Musik","MTV 90's","10","Musik","Nat Geo Wild","20","Dokumentar","National Geographic","20","Dokumentar","Nick Jr.","10","Børn","Nickelodeon","20","Børn",
-   //"Polonia","10","Internationalt","Pro 7","10","Internationalt","Rai 1", "10","Internationalt","Sat1","10","Internationalt","Sport Live","30","Sport","TLC","30","Underholdning","Travel Channel","10","Dokumentar","TV2 Fri","40","Underholdning",
-   //"TV2 News","40","Nyheder","TV2 Sport","40","Sport","TV2 Sport X","40","Sport","TV2 Echo","40","Underholdning","TV3 MAX","30","Sport","TV3 Sport","50","Sport","TV3+","50","Sport","TV5 Monde Europe","10","Internationalt","V series & film","99","Streaming",
-   //"VH1","20","Musik","Viasat Explore","10","Dokumentar","Viasat Golf","30","Sport","Viasat History","10","Dokumentar","Viasat Nature","10","Dokumentar","VOX","10","Underholdning","See","40","Sport"];
-    res1=[];
-        for(let v of vaelgselv){
-         res1.push("<span class='a'>"+v+"</span>")
-    }
-    vaelgselv=res1;
-    let result1 = [];
-    for (let i = 0; i < vaelgselv.length; i+=2) {
-        result1[i] = vaelgselv[i]+ vaelgselv[i+1].replace("kroner","kr.")+"<br>";
-    }
-    vaelgselv=result1
-    let middleIndex = Math.ceil(vaelgselv.length / 2);
-    let firstHalf = vaelgselv.splice(0, middleIndex);   
-    let Titel=["Navn","Pris"];
-    res=[];
-    for(let t of Titel){
-        res.push("<span class='a'>"+t.bold()+"</span>")
-    }
-    Titel=res;
-    let result = [];
-    for (let i = 0; i < Titel.length; i+=2) {
-        result[i] = Titel[i]+ Titel[i+1]+"<br> <hr id=vhr>";
-    }
-    firstHalf=result.concat(firstHalf)
-    let secondHalf = vaelgselv.splice(-middleIndex);
-    secondHalf=result.concat(secondHalf);
-    swal.fire({title:"VælgSelv Frit priser<hr id=vhr>",html:"<div class=align-left id=vaelgpris>"+"<div>"+firstHalf.join("")+"</div>"+"<div>"+secondHalf.join("")+"</div>"+"</div>",width:"90%"});
+btn3.addEventListener("click",()=>{
+    Swal.fire({
+        customClass:"ekstrakanaler",
+        title: 'Tilkøbskanaler',
+        html: '<a href="https://norlys.dk/trim/tv-add-on/?_gl=1*ager6x*_ga*NjY1NDk2MjI5LjE2OTUxMjc5ODk.*_ga_21LE3BG3D3*MTcwOTE5NTU3MS4xMy4xLjE3MDkxOTU1NzYuMC4wLjUyNDgyODE0Nw..*_ga_RFE9GML5G7*MTcwOTE5NTU3Mi4yLjEuMTcwOTE5NTU3Ni4wLjAuMA..">Link</a><br/> <div class="float-container"><div id="billedeekstra1" class="float-child"> <h1 class=headerekstra>Streaming</h1><img alt="streaming" src="ekstrastream.png" class="imgchannels"> </div><div id="billedeekstra2" class="float-child"> <h1 class=headerekstra>Antenne</h1> <img alt="antenne" src="ekstraantenne.png" class="imgchannels"></div></div></div>',
+        position:"top",
+        confirmButtonText: 'OK'
+      });
+
 })
+//btn3.addEventListener("click",()=>{
+//    vaelgselv=vsdict["Pris"];
+//    keys=Object.keys(vaelgselv);
+//   values=Object.values(vaelgselv);
+//   let result3 = keys.map(function(e, i) {
+//    return [e, values[i]];
+//  });
+//   
+//   vaelgselv=result3.flat(1)
+//
+//    res1=[];
+//        for(let v of vaelgselv){
+//         res1.push("<span class='a'>"+v+"</span>")
+//    }
+//    vaelgselv=res1;
+//    let result1 = [];
+//    for (let i = 0; i < vaelgselv.length; i+=2) {
+//        result1[i] = vaelgselv[i]+ vaelgselv[i+1].replace("kroner","kr.")+"<br>";
+//    }
+//    vaelgselv=result1
+//    let middleIndex = Math.ceil(vaelgselv.length / 2);
+//    let firstHalf = vaelgselv.splice(0, middleIndex);   
+//    let Titel=["Navn","Pris"];
+//    res=[];
+//    for(let t of Titel){
+//        res.push("<span class='a'>"+t.bold()+"</span>")
+//    }
+//    Titel=res;
+//    let result = [];
+//    for (let i = 0; i < Titel.length; i+=2) {
+//        result[i] = Titel[i]+ Titel[i+1]+"<br> <hr id=vhr>";
+//    }
+//    firstHalf=result.concat(firstHalf)
+//    let secondHalf = vaelgselv.splice(-middleIndex);
+//    secondHalf=result.concat(secondHalf);
+//    swal.fire({title:"VælgSelv Frit priser<hr id=vhr>",html:"<div class=align-left id=vaelgpris>"+"<div>"+firstHalf.join("")+"</div>"+"<div>"+secondHalf.join("")+"</div>"+"</div>",width:"90%"});
+//})
 //#endregion

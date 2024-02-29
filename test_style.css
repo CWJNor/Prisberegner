@@ -113,8 +113,8 @@ p{
 #Norlys{
     position:absolute;
     bottom:auto;
-    width: 100px;
-    left:88%;
+    width: 10%;
+    left:83%;
     background-color:#eee7e2;
 }
 #Stofa{
@@ -180,7 +180,13 @@ p{
     text-align: center !important;
 }
 
-#btn,#btn1,#btn2,#btn3{
+.ekstrakanaler{
+    width:80% !important;
+    height: 90% !important;
+    text-align: center !important;
+}
+
+#btn,#btn1,#btn2,#btn3,#btn4{
     display:inline;
     width:17%;
     text-align: center;
@@ -248,6 +254,11 @@ button{
     justify-content:space-evenly;
 }
 
+#streamingprisberegn{
+    text-align: center;
+    font-size: 20px;
+}
+
 #vaelgpris{
     display: grid;
     grid-template-columns: 50% 50%;	
@@ -273,4 +284,29 @@ hr{
 .swall_wide{
     width: auto !important;
     max-width: 850px !important;
+}
+
+.float-container {
+    height:100%;
+    border: 3px solid #fff;
+    padding: 20px;
+    text-align: center;
+}
+
+.float-child {
+    height:100%;
+    width: 50%;
+    float: left;
+    padding: 20px;
+    border: 2px solid lightgray;
+}  
+
+.imgchannels{
+    max-height:95%;
+}
+
+
+.headerekstra{
+    font-size: 35px;
+    font-weight: bold;
 }
