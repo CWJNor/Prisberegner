@@ -9,7 +9,7 @@ let myvar=""
 $.ajax({
   contentType: "application/x-www-form-urlencoded;charset=utf-8",
   async:false,
-  url: "https://raw.githubusercontent.com/CWJNor/priscsv/main/kanaler_2024.csv",
+  url: "https://raw.githubusercontent.com/CWJNor/kanalcsv/main/kanaler_2024.csv",
   success: function(csv) {
       const output = Papa.parse(csv, {
         header: true, // Convert rows to Objects using headers as properties
@@ -63,7 +63,7 @@ let genre=""
 $.ajax({
   contentType: "application/x-www-form-urlencoded;charset=utf-8",
   async:false,
-  url: "https://raw.githubusercontent.com/CWJNor/priscsv/main/genre_2024.csv",
+  url: "https://raw.githubusercontent.com/CWJNor/kanalcsv/main/genre_2024.csv",
   success: function(csv) {
       const output = Papa.parse(csv, {
         header: true, // Convert rows to Objects using headers as properties
@@ -844,7 +844,7 @@ let mystream="";
     $.ajax({
       contentType: "application/x-www-form-urlencoded;charset=utf-8",
       async:false,
-      url: "https://raw.githubusercontent.com/CWJNor/priscsv/main/streaming_2024.csv",
+      url: "https://raw.githubusercontent.com/CWJNor/kanalcsv/main/streaming_2024.csv",
       success: function(csv) {
           const output = Papa.parse(csv, {
             header: true, // Convert rows to Objects using headers as properties
@@ -1020,7 +1020,7 @@ let mystreamall="";
     $.ajax({
       contentType: "application/x-www-form-urlencoded;charset=utf-8",
       async:false,
-      url: "https://raw.githubusercontent.com/CWJNor/priscsv/main/streampriser_2024.csv",
+      url: "https://raw.githubusercontent.com/CWJNor/kanalcsv/main/streampriser_2024.csv",
       success: function(csv) {
           const output = Papa.parse(csv, {
             header: true, // Convert rows to Objects using headers as properties
@@ -1072,7 +1072,7 @@ let mypakke="";
     $.ajax({
       contentType: "application/x-www-form-urlencoded;charset=utf-8",
       async:false,
-      url: "https://raw.githubusercontent.com/CWJNor/priscsv/main/Pakkepriser_2024.csv",
+      url: "https://raw.githubusercontent.com/CWJNor/kanalcsv/main/Pakkepriser_2024.csv",
       success: function(csv) {
           const output = Papa.parse(csv, {
             header: true, // Convert rows to Objects using headers as properties
