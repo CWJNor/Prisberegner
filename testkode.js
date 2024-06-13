@@ -907,12 +907,12 @@ let streamcol4 = document.querySelector(".streamcol4");
 
 for (let i=0;i<stream.length;i++) {
     let side=streamcol1;
-    if (i>=4){ //stream.length/4
-        if(i>=3*4){
+    if (i>=3){ //stream.length/4
+        if(i>=3*3){
             side=streamcol4;
         }
         else{
-            if(i>=2*4){
+            if(i>=2*3){
                 side=streamcol3;
             }
             else{
@@ -1169,6 +1169,7 @@ let NVFfunc=function(){
                         }
                     }
                 }
+             
                 for (let st of stream){
                     for (let s of Object.keys(st)){
                         if(values.includes(s)){
@@ -1973,6 +1974,87 @@ let YouPfunc=function(){
     
 }
 
+//Yousee pakkeløsning
+
+//Norlys Pakkeløsning
+let YouPakkefunc=function(){
+    let ikkem=[];
+    let streamlist=[];
+    let kanaler=[udbyderdict["Yousee_pakker"]];
+    //[{TV2:0,TV2Charlie:0,TV2Fri:1,TV2News:1,TV2Sport:2,TV2SportX:2,TV2Echo:1,TV3:0,TV3Max:2,"TV3 +":1,TV3Puls:0,TV3Sport:2,Kanal4:0,Kanal5:0,'6eren':1,Canal9:2,DiscoveryChannel:1,DK4:0,NationalGeographic:1,'3Sat':"Løsning ikke mulig",AlJazeera:"Løsning ikke mulig",Animalplanet:2,ARD:0,ARTE:"Løsning ikke mulig",BBCBrit:"Løsning ikke mulig",BBCEarth:"Løsning ikke mulig",BBCWorldNews:"Løsning ikke mulig",BlueHustler:"Løsning ikke mulig",Boomerang:2,CartoonNetwork:1,CBSReality:"Løsning ikke mulig",CNN:2,DisneyChannel:1,DisneyJunior:2,Euronews:"Løsning ikke mulig",Eurosport1:2,Eurosport2:2,"ID-InvestegationDiscovery":2,Mezzo:"Løsning ikke mulig",MTV:2,MTV80s:"Løsning ikke mulig",MTV90s:"Løsning ikke mulig",MTVHits:"Løsning ikke mulig",NationalGeographicWild:2,NDR:0,"Nick jr.":2,Nickelodeon:1,NRK1:0,ZDF:0,SVT1:0,Folketinget:0,NRK2:"Løsning ikke mulig","TV4 Sverige":0,SVT2:0,"TV2Norge":0,ProSieben:"Løsning ikke mulig","Rai 1":"Løsning ikke mulig",See:1,TLC:1,VH1:2,"V sport golf":2,"Viasat Explore":2,"Viasat History":2,"Viasat Nature":2,DiscoveryScience:"Løsning ikke mulig","ESC/ESC1":"Løsning ikke mulig","Extreme Sport":"Løsning ikke mulig","HRT-TV1":"Løsning ikke mulig",MTVClub:"Løsning ikke mulig",MTVLive:"Løsning ikke mulig",Polonia:"Løsning ikke mulig","Sport Live":0}];
+    let stream=[streamdict["Yousee_pakker"]];
+    //[{TV2PlayBasis:2,TV2PlayFavoritSport:2,"TV2PlayFavoritSport (Uden reklamer)":"Løsning ikke mulig","Disney+":"Løsning ikke mulig",HBOMax:"Løsning ikke mulig",NetflixStandard:"Løsning ikke mulig",NetflixPremium:"Løsning ikke mulig","NordiskFilm+":2,CMore:"Løsning ikke mulig",SkyShowtime:"Løsning ikke mulig","Discovery+underholdning":2,"Discovery+Sport":"Løsning ikke mulig","Viaplay (Film og Serier)":1,"Viaplay Total":2}];
+    let pakke=[pakkedict["Yousee_pakker"]]
+    kanaler.sort();
+    stream.sort();
+    let NPL=0;
+    let NPLstream=0;
+    Object.keys(kanaler[0]).forEach(navn=>{
+        if(kanaler[0][navn]!=="Løsning ikke mulig"){
+          kanaler[0][navn]=Number(kanaler[0][navn])
+        }
+      })
+      Object.keys(stream[0]).forEach(stnavn=>{
+        if(stream[0][stnavn]!=="Løsning ikke mulig"){
+          stream[0][stnavn]=Number(stream[0][stnavn])
+        }
+      })
+      Object.keys(pakke[0]).forEach(pnavn=>{
+        if(pakke[0][pnavn]!=="Løsning ikke mulig"){
+            pakke[0][pnavn]=Number(pakke[0][pnavn])
+        }  
+    })
+                for (let kanal of kanaler){
+                    for (let k of Object.keys(kanal)){
+                        if(values.includes(k)){
+                            if(kanal[k]=="Løsning ikke mulig"||NPL=="Løsning ikke mulig"){
+                                NPL="Løsning ikke mulig";
+                                if (kanal[k]=="Løsning ikke mulig"){
+                                    ikkem.push(k);}
+                            }
+                            if(NPL<kanal[k]){
+                                NPL=kanal[k];
+                            }
+                        }
+                    }
+                }
+                for (let st of stream){
+                    for (let s of Object.keys(st)){
+                        if(values.includes(s)){
+                            if(st[s]=="Løsning ikke mulig"){
+                                if(streampris[0][s]=="Løsning ikke mulig"){
+                                    NPL="Løsning ikke mulig";
+                                    ikkem.push(s);
+                                }
+                                else{
+                                    NPLstream+=streampris[0][s];
+                                    streamlist.push(s);
+                                }
+                            }
+                            if(NPL<st[s]){
+                                NPL=st[s];
+                            }
+                        }
+                    }
+                }
+        let NPLp=pakke[0]
+        let pakkepris=[NPLp["Lille pakke"],NPLp["Mellem pakke"],NPLp["Stor pakke"]]
+        let pakken=[" (lille pakke)"," (mellem pakke)", " (stor pakke)"]
+        if(NPL=="Løsning ikke mulig"){
+            return "Løsning ikke mulig pga.:<br>("+ikkem.join(", ")+")";
+        }
+        else{
+            if(NPLstream==0){
+                return pakkepris[NPL]+" kr." +pakken[NPL];
+            }
+            else{
+                return NPLstream+pakkepris[NPL]+" kr."+pakken[NPL]+" (inkl. tilkøb af "+streamlist.join(", ")+" direkte hos streamingudbyderen)"+"<br>"+pakkepris[NPL]+" kr. (ekskl. "+streamlist.join(", ")+")";
+            }
+    }
+}
+
+
+
 //Allente Stream TV: Basic=0,Standard=1,Premium=2
 let AllStreamFunc=function(){
     let ekstraflex=0;
@@ -2220,10 +2302,11 @@ const btn = document.querySelector('#btn');
             let NPL=NPLfunc();
             let AS=AllStreamFunc();
             let AP=AllParaFunc();
+            let Youpakke=YouPakkefunc();
 
             let minpris=Number.MAX_VALUE;
             let expr="([0-9]+) .*"
-            Udbyderliste=[{name:"NVODTT",val:NVODTT},{name:"NVF",val:NVF},{name:"NPL",val:NPL},{name:"YouP",val:YouP},{name:"NVO",val:NVO},{name:"NV4",val:NV4},{name:"NVT",val:NVT},{name:"NVA",val:NVA},{name:"AS",val:AS},{name:"AP",val:AP}];
+            Udbyderliste=[{name:"NVODTT",val:NVODTT},{name:"NVF",val:NVF},{name:"NPL",val:NPL},{name:"YouP",val:YouP},{name:"NVO",val:NVO},{name:"NV4",val:NV4},{name:"NVT",val:NVT},{name:"NVA",val:NVA},{name:"AS",val:AS},{name:"AP",val:AP},{name:"Youpakke",val:Youpakke}];
             for (let u of Udbyderliste){
                 val=u.val.replace(expr,"");
                 val=parseInt(val);
@@ -2246,6 +2329,9 @@ const btn = document.querySelector('#btn');
                     }
                     if (u.name=="YouP"){
                         YouP="<span class=cheap>"+YouP+"</span>";
+                    }
+                    if (u.name=="Youpakke"){
+                        YouP="<span class=cheap>"+Youpakke+"</span>";
                     }
                     if (u.name=="NV4"){
                         NV4="<span class=cheap>"+NV4+"</span>";
@@ -2286,7 +2372,9 @@ const btn = document.querySelector('#btn');
             pris.push("<br>");
             pris.push("<br>"+"YouSee Play: ".bold()+YouP);
             pris.push("<br>");
-            pris.push("<br>"+"Allente Streaming: ".bold()+AS);
+            pris.push("<br>"+"YouSee Pakkeløsning: ".bold()+Youpakke);
+            //pris.push("<br>");
+            //pris.push("<br>"+"Allente Streaming: ".bold()+AS);
             pris.push("<br>");
             pris.push("<br>"+"Allente Parabol: ".bold()+AP);
             if (values.length==0){
